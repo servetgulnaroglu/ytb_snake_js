@@ -19,7 +19,7 @@ const game = {
 }
  
 function update() {
-    for (let snake of game.snakes) {
+    for (const snake of game.snakes) {
         if (!snake.move()) {
             snake.die();
         }
