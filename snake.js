@@ -16,7 +16,7 @@ export default class Snake {
     }
 
     move() {
-        var newCoordinates = this.#getNextCoordinates();
+        const newCoordinates = this.#getNextCoordinates();
         this.x = newCoordinates.x;
         this.y = newCoordinates.y;
         
@@ -76,7 +76,7 @@ export default class Snake {
     }
 
     #getNextCoordinates() {
-        var newCoordinates;;
+        let newCoordinates;
         if (this.#rotateX === 1) {
             newCoordinates = {
                 x: this.tail[this.tail.length - 1].x + this.size,
@@ -102,7 +102,7 @@ export default class Snake {
     }
 
     #hasBodyCollision() {
-        for (var i = 1; i < this.tail.length - 1; i++) {
+        for (let i = 1; i < this.tail.length - 1; i++) {
             if (this.head.x === this.tail[i].x && this.head.y === this.tail[i].y) {
                 return true;
             }

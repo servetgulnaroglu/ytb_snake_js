@@ -9,17 +9,17 @@ const canvas = document.getElementById("canvas");
 const { width, height } = canvas;
 
 // game logic
-var snake1 = new Snake(20, 20, 20, width, height, "blue");
-var snake2 = new Snake(120, 20, 20, width, height, "red");
-var snake3 = new Snake(220, 20, 20, width, height, "yellow");
-var snake4 = new Snake(320, 20, 20, width, height, "green");
+const snake1 = new Snake(20, 20, 20, width, height, "blue");
+const snake2 = new Snake(120, 20, 20, width, height, "red");
+const snake3 = new Snake(220, 20, 20, width, height, "yellow");
+const snake4 = new Snake(320, 20, 20, width, height, "green");
 const game = {
     snakes: [snake1, snake2, snake3, snake4],
     apple: new Apple([snake1, snake2, snake3, snake4], 20),
 }
  
 function update() {
-    for (var snake of game.snakes) {
+    for (let snake of game.snakes) {
         if (!snake.move()) {
             snake.die();
         }
@@ -32,7 +32,7 @@ function update() {
 
 // display logic
 
-var lastFrameTimestamp;
+let lastFrameTimestamp;
 const maxFPS = 15;
 const scoreRenderer = new ScoreRenderer(game, canvas);
 const appleRenderer = new AppleRenderer(game, canvas);
