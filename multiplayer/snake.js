@@ -2,24 +2,23 @@ export default class Snake {
     #rotateX = 0;
     #rotateY = 1;
     #acceptInput = true;
-
+    #y;
+    #x;
     constructor(x, y, size, width, height, color) {
-        this.x = x;
-        this.y = y;
+        this.#x = x;
+        this.#y = y;
         this.size = size;
         this.width = width;
         this.height = height;
         this.color = color;
-        
+        this.alive = true;
         this.tail = [{ x: x, y: y }];
         this.head = this.tail[this.tail.length - 1];
     }
-
+    
     move() {
         const newCoordinates = this.#getNextCoordinates();
-        this.x = newCoordinates.x;
-        this.y = newCoordinates.y;
-        
+ 
         this.tail.shift();
         this.tail.push(newCoordinates);
         this.head = this.tail[this.tail.length - 1];
@@ -27,7 +26,6 @@ export default class Snake {
         this.#acceptInput  = true;
         
         this.#teleportFromBorders();
-        return !this.#hasBodyCollision();
     }
 
     turnLeft() {
@@ -67,43 +65,46 @@ export default class Snake {
     }
 
     eat(apple) {
-        if (this.head.x === apple.x && this.head.y === apple.y) {
-            this.tail[this.tail.length] = this.#getNextCoordinates();
-            this.head = this.tail[this.tail.length - 1];
-            return true;
-        }
-        return false;
+        return (this.head.x === apple.x && this.head.y === apple.y) 
+    }
+
+    grow() {
+        this.tail[this.tail.length] = this.#getNextCoordinates();
+        this.head = this.tail[this.tail.length - 1];
     }
 
     #getNextCoordinates() {
         let newCoordinates;
         if (this.#rotateX === 1) {
             newCoordinates = {
-                x: this.tail[this.tail.length - 1].x + this.size,
-                y: this.tail[this.tail.length - 1].y
+                x: this.head.x + this.size,
+                y: this.head.y
             }
         } else if (this.#rotateX === -1) {
             newCoordinates = {
-                x: this.tail[this.tail.length - 1].x - this.size,
-                y: this.tail[this.tail.length - 1].y
+                x: this.head.x - this.size,
+                y: this.head.y
             }
         } else if (this.#rotateY === 1) {
             newCoordinates = {
-                x: this.tail[this.tail.length - 1].x,
-                y: this.tail[this.tail.length - 1].y + this.size
+                x: this.head.x,
+                y: this.head.y + this.size
             }
         } else if (this.#rotateY === -1) {
             newCoordinates = {
-                x: this.tail[this.tail.length - 1].x,
-                y: this.tail[this.tail.length - 1].y - this.size
+                x: this.head.x,
+                y: this.head.y - this.size
             }
         }
         return newCoordinates;
     }
 
-    #hasBodyCollision() {
-        for (let i = 1; i < this.tail.length - 1; i++) {
-            if (this.head.x === this.tail[i].x && this.head.y === this.tail[i].y) {
+    hasCollision(otherSnake) {
+        if (this !== otherSnake && this.head.x === otherSnake.head.x && this.head.y === otherSnake.head.y) {
+            return true;
+        }
+        for (let i = 0; i < otherSnake.tail.length - 1; i++) {
+            if (this.head.x === otherSnake.tail[i].x && this.head.y === otherSnake.tail[i].y) {
                 return true;
             }
         }
@@ -123,7 +124,11 @@ export default class Snake {
     }
 
     die() {
-        this.tail = [{ x: this.x, y: this.y }];
+        this.#rotateX = 0;
+        this.#rotateY = 1;
+        this.#acceptInput = true;
+        this.tail = [{ x: this.#x, y:  this.#y }];
         this.head = this.tail[this.tail.length - 1];
+        this.alive = false;
     }
 }

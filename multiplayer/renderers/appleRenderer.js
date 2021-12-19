@@ -4,9 +4,9 @@ export default class AppleRenderer {
         this.ctx = canvas.getContext('2d');
     }
     draw() {
-
-        this.ctx.fillStyle = this.game.apple.color;
-        this.ctx.fillRect(this.game.apple.x, this.game.apple.y, this.game.apple.size, this.game.apple.size);
-
+        for(const apple of this.game.apples) {
+            this.ctx.fillStyle = apple.color;
+            this.ctx.fillRect(apple.x, apple.y, apple.size, apple.size);
+        }
     }
 }

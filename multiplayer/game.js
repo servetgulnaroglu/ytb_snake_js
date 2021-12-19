@@ -9,65 +9,106 @@ const canvas = document.getElementById("canvas");
 const { width, height } = canvas;
 
 // game logic
-const snake1 = new Snake(20, 20, 20, width, height, "blue");
-const snake2 = new Snake(120, 20, 20, width, height, "red");
-const snake3 = new Snake(220, 20, 20, width, height, "yellow");
-const snake4 = new Snake(320, 20, 20, width, height, "green");
 const game = {
-    snakes: [snake1, snake2, snake3, snake4],
-    apple: new Apple([snake1, snake2, snake3, snake4], 20),
-}
- 
-function update() {
-    for (const snake of game.snakes) {
-        if (!snake.move()) {
+    lastFrameTimestamp: 0,
+    maxFPS: 15,
+    colors: ["blue", "red", "yellow", "green"],
+    snakes: [],
+    apples: [],
+    getAliveSnakes() {
+        return this.snakes.filter(snake => snake.alive);
+    },
+    addSnake: function () {
+        const snakeIndex = game.snakes.length;
+        const snakeInitialX = (snakeIndex * 100) + 20;
+        game.snakes.push(new Snake(snakeInitialX, 20, 20, width, height, game.colors[snakeIndex]));
+    },
+    addApple: function () {
+        game.apples.push(new Apple(game.getAliveSnakes(), 20));
+    },
+    checkEatenApples: function () {
+        for (const apple of game.apples) {
+            for (const snake of game.getAliveSnakes()) {
+                if (snake.eat(apple)) {
+                    game.apples.splice(game.apples.indexOf(apple), 1);
+                    game.addApple();
+                    snake.grow();
+                }
+            }
+        }
+    },
+    checkCollsiions: function () {
+        const snakesToDie = [];
+        for (const snake of game.getAliveSnakes()) {
+            for (const otherSnake of game.getAliveSnakes()) {
+                if (snake.hasCollision(otherSnake)) {
+                    snakesToDie.push(snake);
+                }
+            }
+        }
+        for (const snake of snakesToDie) {
             snake.die();
+            setTimeout(game.recoverSnake, 5000, snake);
+        }
+    },
+    recoverSnake: function (snake) {
+        snake.alive = true;
+    },
+    updateSnakes: function () {
+        for (const snake of game.getAliveSnakes()) {
+            snake.move();
+        }
+    },
+    start: function (numberOfPlayers, numberOfApples, speed) {
+        game.snakes = [];
+        game.apples = [];
+        console.log(speed);
+        game.maxFPS = speed;
+        if (numberOfPlayers > game.colors.length) {
+            throw new Error("Too many players");
+        }
+        for (let i = 0; i < numberOfPlayers; i++) {
+            game.addSnake();
+        }
+        for (let i = 0; i < numberOfApples; i++) {
+            game.addApple();
         }
 
-        if (snake.eat(game.apple)) {
-            game.apple = new Apple([snake1, snake2, snake3, snake4], 20);
+        requestAnimationFrame(game.gameLoop);
+    },
+    gameLoop: function (timestamp) {
+        if (timestamp < game.lastFrameTimestamp + (1000 / game.maxFPS)) {
+            requestAnimationFrame(game.gameLoop);
+            return;
         }
+
+        game.lastFrameTimestamp = timestamp;
+        game.update();
+        game.draw();
+        requestAnimationFrame(game.gameLoop);
+    },
+    update: function () {
+        game.updateSnakes();
+        game.checkCollsiions();
+        game.checkEatenApples();
+    },
+    draw: function () {
+        snakeRenderer.draw();
+        scoreRenderer.draw();
+        appleRenderer.draw();
     }
+
 }
 
-// display logic
-
-let lastFrameTimestamp;
-const maxFPS = 15;
 const scoreRenderer = new ScoreRenderer(game, canvas);
 const appleRenderer = new AppleRenderer(game, canvas);
 const snakeRenderer = new SnakeRenderer(game, canvas);
-
-window.onload = function () {
-    requestAnimationFrame(gameLoop);
-}
-
-function gameLoop(timestamp) {
-    if (timestamp < lastFrameTimestamp + (1000 / maxFPS)) {
-        requestAnimationFrame(gameLoop);
-        return;
-    }
-
-    lastFrameTimestamp = timestamp;
-    update();
-    draw();
-    requestAnimationFrame(gameLoop);
-}
-
-function draw() {
-    snakeRenderer.draw();
-    scoreRenderer.draw();
-    appleRenderer.draw();
-}
-
-// input logic
 const keyboardListener = new KeyboardListener();
 
 window.addEventListener("keydown", function (event) {
-    keyboardListener.listenArrows(event, snake1);
-    keyboardListener.listenASDW(event, snake2);
-    keyboardListener.listenFGHT(event, snake3);
-    keyboardListener.listenJKLI(event, snake4);
+    if (!keyboardListener.listen(event, game.snakes)) {
+        throw new Error("You cannot listen for more than 4 snakes");
+    }
 });
 
-
+window.snakeGame = game;

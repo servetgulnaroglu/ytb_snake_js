@@ -10,8 +10,8 @@ export default class Apple {
         const snake = snakes[0];
         while (true) {
             const xCandidate = Math.floor(Math.random() * canvas.width / snake.size) * snake.size;
-            const yCandidate = Math.floor(Math.random() * canvas.height / snake.size) * snake.size;
-            if (this.#isEmptyPlace(snakes, xCandidate, yCandidate)) {
+            const yCandidate = Math.floor(Math.random() * (canvas.height) / snake.size) * snake.size;
+            if (this.#isEmptyPlace(snakes, xCandidate, yCandidate) && yCandidate > 0) {
                 this.x = xCandidate;
                 this.y = yCandidate;
                 break;
