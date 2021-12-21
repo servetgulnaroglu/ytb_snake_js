@@ -15,6 +15,7 @@ const game = {
     colors: ["blue", "red", "yellow", "green"],
     snakes: [],
     apples: [],
+    animationHandle: null,
     getAliveSnakes() {
         return this.snakes.filter(snake => snake.alive);
     },
@@ -62,7 +63,7 @@ const game = {
     start: function (numberOfPlayers, numberOfApples, speed) {
         game.snakes = [];
         game.apples = [];
-        console.log(speed);
+       
         game.maxFPS = speed;
         if (numberOfPlayers > game.colors.length) {
             throw new Error("Too many players");
@@ -74,18 +75,27 @@ const game = {
             game.addApple();
         }
 
-        requestAnimationFrame(game.gameLoop);
+        game.animationHandle = requestAnimationFrame(game.gameLoop);
     },
+    stop: function () {
+        cancelAnimationFrame(game.animationHandle);
+        game.clearCanvas()
+    },
+    clearCanvas: function () {
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, width, height);
+    },
+
     gameLoop: function (timestamp) {
         if (timestamp < game.lastFrameTimestamp + (1000 / game.maxFPS)) {
-            requestAnimationFrame(game.gameLoop);
+            game.animationHandle = requestAnimationFrame(game.gameLoop);
             return;
         }
 
         game.lastFrameTimestamp = timestamp;
         game.update();
         game.draw();
-        requestAnimationFrame(game.gameLoop);
+        game.animationHandle = requestAnimationFrame(game.gameLoop);
     },
     update: function () {
         game.updateSnakes();

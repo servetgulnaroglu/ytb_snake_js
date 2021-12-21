@@ -10,18 +10,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <!-- Compiled and minified JavaScript -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./styles/styles.css">
 </head>
-
-
 <body>
 
     <div class="row">
         <div class="col s6">
-            <div class="card crt">
+            <div id="tv" class="card">
+                <div id="scanline"></div>
                 <div id="screen" class="card-content">
                     <span class="card-title">Snake Game</span>
-                   
+                    
                     <canvas id="canvas" width="500" height="500"></canvas>
                 </div>
             </div>
@@ -29,16 +28,31 @@
 
         <div class="col s6">
             <div id="settings" class="card">
+              
                 <div class="card-content">
                     <div id="game-mode">
-                        <div class="switch">
-                            <label>
-                                Local
-                                <input type="checkbox" id="online">
-                                <span class="lever"></span>
-                                Online
-                            </label>
+                        <div class="row">
+                            <div class="col s6">
+        
+                                <button id="start-button" class="waves-effect waves-light btn">Start</button>
+                            </div>
+                            <div class="col s6">
+                                <button id="stop-button" class="waves-effect waves-light btn" disabled>Stop</button>
+                            </div>
+                            
                         </div>
+                       <div class="row">
+                           <div class="col s12">
+                            <div class="switch">
+                                <label>
+                                    Local
+                                    <input type="checkbox" id="online">
+                                    <span class="lever"></span>
+                                    Online
+                                </label>
+                            </div>
+                           </div>
+                       </div>
                     </div>
                     <div class="flip-card-inner">
                         <div class="flip-card-front">
@@ -63,24 +77,16 @@
                                     <input type="number" id="apples" min="1" max="10" value="1">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col s12">
-
-                                    <button id="start-button" class="waves-effect waves-light btn">Start</button>
-                                </div>
-                            </div>
-
+                          
                         </div>
                         <div class="flip-card-back">
                             <div class="row">
-                                <div class="col s6">
+                                <div class="col s12">
                                     <button id="create-room-button" class="waves-effect waves-light btn">Create
                                         room</button>
 
                                 </div>
-                                <div class="col s6">
-                                    <button id="start-button-online" class="waves-effect waves-light btn">Start</button>
-                                </div>
+                              
                             </div>
                             <div class="row">
                                 <div class="input-field col s6">
@@ -111,6 +117,7 @@
                                 </div>
                             </div>
                         </div>
+                      
                     </div>
                 </div>
             </div>
@@ -120,18 +127,42 @@
     <script type="module" src="game.js"></script>
     <script>
         M.AutoInit();
+        const startButton = document.getElementById("start-button");
+        const stopButton = document.getElementById("stop-button");
+        const onlineSwitch = document.getElementById("online");
+        const cardInner = document.getElementsByClassName("flip-card-inner")[0];
+        const cardFront = document.getElementsByClassName("flip-card-front")[0];
+        const cardBack = document.getElementsByClassName("flip-card-back")[0];
+        const scanline = document.getElementById("scanline");
 
-        document.getElementById("start-button").addEventListener("click", function () {
+        startButton.addEventListener("click", function () {
             const players = document.getElementById('players').value;
             const apples = document.getElementById('apples').value;
             const speed = document.getElementById('speed').value;
+            
+            screen.classList.add("crt");
+            scanline.classList.add("scanline");
+            screen.classList.remove("turn-off");
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            onlineSwitch.disabled = true;
+
             try {
+
                 snakeGame.start(players, apples, speed);
             }
             catch (err) {
                 alert(err);
             }
         });
+
+        stopButton.addEventListener("click", function () {
+            screen.classList.add("turn-off");
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            onlineSwitch.disabled = false;
+        });
+
 
         function toggleControls(cardSide, display) {
             const buttons = cardSide.getElementsByTagName("button");
@@ -144,24 +175,23 @@
             }
         }
 
-        document.getElementById("online").addEventListener("click", function (event, sender) {
+        onlineSwitch.addEventListener("click", function (event, sender) {
             const online = event.target.checked;
-
             const transformValue = online ? "rotateY(180deg)" : "rotateY(0deg)";
-            const cardInner = document.getElementsByClassName("flip-card-inner")[0];
             cardInner.style.WebkitTransform = transformValue;
-            const cardFront = document.getElementsByClassName("flip-card-front")[0];
-            const cardBack = document.getElementsByClassName("flip-card-back")[0];
             toggleControls(online ? cardBack : cardFront, "block");
-
         });
 
-        const cardInner = document.getElementsByClassName("flip-card-inner")[0];
-        cardInner.addEventListener('transitionend', () => {
+        const screen = document.getElementById("screen");
+        screen.addEventListener("animationend", function () {
+            snakeGame.stop();
+            screen.classList.remove("crt");
+            scanline.classList.remove("scanline");
+         
+        });
 
+        cardInner.addEventListener('transitionend', () => {
             const online = document.getElementById("online").checked
-            const cardFront = document.getElementsByClassName("flip-card-front")[0];
-            const cardBack = document.getElementsByClassName("flip-card-back")[0];
             toggleControls(online ? cardFront : cardBack, "none");
         });
 

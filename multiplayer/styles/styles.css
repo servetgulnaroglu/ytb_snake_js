@@ -8,16 +8,17 @@
  #screen {
     border-radius: 15px;
 
-    background-color: #000;
-    z-index: 100;
-    opacity: 0.8;
+    background: #000;
+    z-index: 1000;
+    
     margin-bottom: 10px;
 }
  
 #settings {
-    height: 400px;
+    height: 450px;
     width: 50%;
 }
+
 .flip-card-inner {
     transition: transform 0.8s;
     transform-style: preserve-3d;
@@ -33,13 +34,16 @@
     backface-visibility: hidden;
 }
 
- 
-
 .flip-card-back {
     transform: rotateY(180deg);
 }
 
 .card {
     border-radius: 15px;
+}
+
+#tv {
+    background-color: #000;
+    opacity: 0.9;
 }
  

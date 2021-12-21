@@ -205,3 +205,62 @@
     animation: textShadow 1.6s infinite;
 
 }
+
+
+@keyframes turnOff {
+	0% {
+		background: #fff !important;
+		transform: scale(1, 1) translate3d(0, 0, 0);
+		-webkit-filter: brightness(1);
+		filter: brightness(1);
+		opacity: 1;
+	}
+	60% {
+		background: #fff !important;
+		transform: scale(1, 0.001) translate3d(0, 0, 0);
+		-webkit-filter: brightness(10);
+		filter: brightness(10);
+	}
+	100% {
+		background: #fff !important;
+		animation-timing-function: ease-out;
+		transform: scale(0, 0.0001) translate3d(0, 0, 0);
+		-webkit-filter: brightness(50);
+		filter: brightness(50);
+	}
+}
+
+ .turn-off {
+	animation: turnOff 0.7s ease-in-out;
+	/* animation-fill-mode: forwards; */
+}
+
+
+@keyframes scanline {
+	0% {
+		bottom: 100%;
+	}
+	80% {
+		bottom: 100%;
+	}
+	100% {
+		bottom: 0%;
+	}
+}
+
+.scanline {
+	width: 100%;
+	height: 100px;
+	z-index: 8;
+	background: linear-gradient(
+		0deg,
+		rgba(0, 0, 0, 0) 0%,
+		rgba(255, 255, 255, 0.2) 10%,
+		rgba(0, 0, 0, 0.1) 100%
+	);
+	opacity: 0.1;
+	position: absolute;
+	bottom: 100%;
+	pointer-events: none;
+	animation: scanline 10s linear infinite;
+}
