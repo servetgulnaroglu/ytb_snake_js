@@ -1,18 +1,18 @@
-import Snake from './snake.js';
-import Apple from './apple.js';
+import Snake from '../snake.js';
+import Apple from '../apple.js';
 import KeyboardListener from './listeners/keyboardListener.js';
 import ScoreRenderer from './renderers/scoreRenderer.js';
 import SnakeRenderer from './renderers/snakeRenderer.js';
 import AppleRenderer from './renderers/appleRenderer.js';
+import colors from '../colors.js';
 
 const canvas = document.getElementById("canvas");
-const { width, height } = canvas;
+let { width, height } = canvas;
 
 // game logic
 const game = {
     lastFrameTimestamp: 0,
     maxFPS: 15,
-    colors: ["blue", "red", "yellow", "green"],
     snakes: [],
     apples: [],
     animationHandle: null,
@@ -22,7 +22,7 @@ const game = {
     addSnake: function () {
         const snakeIndex = game.snakes.length;
         const snakeInitialX = (snakeIndex * 100) + 20;
-        game.snakes.push(new Snake(snakeInitialX, 20, 20, width, height, game.colors[snakeIndex]));
+        game.snakes.push(new Snake(snakeInitialX, 20, 20, width, height, colors[snakeIndex]));
     },
     addApple: function () {
         game.apples.push(new Apple(game.getAliveSnakes(), 20));
@@ -38,7 +38,7 @@ const game = {
             }
         }
     },
-    checkCollsiions: function () {
+    checkCollisions: function () {
         const snakesToDie = [];
         for (const snake of game.getAliveSnakes()) {
             for (const otherSnake of game.getAliveSnakes()) {
@@ -65,7 +65,7 @@ const game = {
         game.apples = [];
        
         game.maxFPS = speed;
-        if (numberOfPlayers > game.colors.length) {
+        if (numberOfPlayers > colors.length) {
             throw new Error("Too many players");
         }
         for (let i = 0; i < numberOfPlayers; i++) {
@@ -99,7 +99,7 @@ const game = {
     },
     update: function () {
         game.updateSnakes();
-        game.checkCollsiions();
+        game.checkCollisions();
         game.checkEatenApples();
     },
     draw: function () {
@@ -121,4 +121,5 @@ window.addEventListener("keydown", function (event) {
     }
 });
 
+ 
 window.snakeGame = game;

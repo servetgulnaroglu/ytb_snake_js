@@ -16,6 +16,8 @@ export default class Snake {
         this.head = this.tail[this.tail.length - 1];
     }
     
+  
+
     move() {
         const newCoordinates = this.#getNextCoordinates();
  
