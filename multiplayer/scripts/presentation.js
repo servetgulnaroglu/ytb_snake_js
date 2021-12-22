@@ -189,17 +189,15 @@ const presentation = {
     connectOnlineGame: async function (event) {
         const online = event.target.checked;
 
+        playerIdInput.disabled =
+        roomIdToJoinInput.disabled =
+        createRoom.disabled = 
+        joinRoom.disabled = !online;
 
         if (online) {
             // connect socket 
             await gameClient.connectAsync();
-            playerIdInput.disabled = false;
-            
-            // playerIdLabel.classList.add("active");
-            createRoom.disabled = false;
-            joinRoom.disabled = false;
-            roomIdToJoinInput.disabled = false;
-
+ 
         } else {
             // disconnect socket
             if (currentRoomId) {
@@ -207,11 +205,8 @@ const presentation = {
                 currentRoomId = null;
                 roomIdInput.value = "";
                 roomIdLabel.classList.remove("active");
-                createRoom.disabled = false;
-                joinRoom.disabled = false;
-                leaveRoom.disabled = true;
             }
-
+           
             await gameClient.disconnectAsync();
             // playerId = null;
             // playerIdLabel.classList.remove("active");

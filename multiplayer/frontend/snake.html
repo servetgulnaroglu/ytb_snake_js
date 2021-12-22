@@ -16,7 +16,7 @@
 <body>
     <main>
         <div class="row">
-            <div class="col s8">
+            <div class="col m12 l8">
                 <div id="tv" class="card">
                     <div id="screen" class="card-content">
                         <div id="scanline"></div>
@@ -25,27 +25,23 @@
                     </div>
                 </div>
             </div>
-            <div class="col s4">
-                <div class="controls">
-                 
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="switch">
-                                <label>
-                                    Local
-                                    <input type="checkbox" id="online">
-                                    <span class="lever"></span>
-                                    Online
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            <div class="col m12 l4">
                 <div class="settings">
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title">Settings</span>
-
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="switch">
+                                        <label>
+                                            Local
+                                            <input type="checkbox" id="online">
+                                            <span class="lever"></span>
+                                            Online
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col s12">
                                     <label for="speed">Speed:</label>
@@ -67,27 +63,26 @@
                                     <input type="number" id="apples" min="1" max="10" value="1">
                                 </div>
                             </div>
- 
                             <div class="row">
-                                <div class="col s12">
+                                <div class="input-field col s12">
+                                    <input type="text" id="player-id" disabled>
+                                    <label for="player-id">Player ID</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s6">
                                     <button id="create-room-button"
                                         class="waves-effect waves-light btn green darken-1" disabled>Create
                                         room</button>
 
                                 </div>
-
-                            </div>
-                            <div class="row">
                                 <div class="input-field col s6">
                                     <input type="text" id="room-id" disabled>
                                     <label for="room-id">Room ID</label>
                                 </div>
 
-                                <div class="input-field col s6">
-                                    <input type="text" id="player-id" disabled>
-                                    <label for="player-id">Player ID</label>
-                                </div>
                             </div>
+                           
                             <div class="row">
                                 <div class="input-field col s6">
                                     <input type="text" id="room-id-input" disabled>
