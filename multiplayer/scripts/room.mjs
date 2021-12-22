@@ -20,7 +20,5 @@ export default class Room {
         return this.game.updateState();
     }
 
-    startGame() {
-        this.game.start();
-    }
+     
 } 

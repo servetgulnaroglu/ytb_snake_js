@@ -64,15 +64,14 @@ function startLocalGame() {
 
 }
 
-async function startOnlineGame() {
-  
-
-    await gameClient.startGame(currentRoomId);
+function startOnlineGame() {
     const keyboardListener = new RemoteKeyboardListener();
 
     window.addEventListener("keydown", function (event) {
         keyboardListener.listen(event, gameClient, currentRoomId);
     });
+
+    animationHandle = requestAnimationFrame(gameLoop);
 }
 
 function stopLocalGameStart() {
@@ -97,7 +96,7 @@ function stopLocalGameEnd() {
     tv.style.backgroundColor = "white";
 }
 
-function gameLoop(timestamp) {
+async function gameLoop(timestamp) {
     const speed = document.getElementById('speed').value;
     if (timestamp < lastFrameTimestamp + (1000 / speed)) {
         animationHandle = requestAnimationFrame(gameLoop);
@@ -105,7 +104,7 @@ function gameLoop(timestamp) {
     }
 
     lastFrameTimestamp = timestamp;
-    const newState = currentGame.updateState();
+    const newState = currentGame ? currentGame.updateState() : await gameClient.updateState(currentRoomId);
     draw(newState);
     animationHandle = requestAnimationFrame(gameLoop);
 }
@@ -179,7 +178,7 @@ export default {
         stopButton.disabled = false;
         onlineSwitch.disabled = true;
         const startHandler = online.checked ? startOnlineGame : startLocalGame;
-        await startHandler();
+        startHandler();
     },
     connectOnlineGame: async function (event) {
         const online = event.target.checked;

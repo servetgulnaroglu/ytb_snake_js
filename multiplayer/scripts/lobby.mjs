@@ -29,9 +29,7 @@ const lobby = {
     moveSnake(roomId, playerId, direction) {
         rooms[roomId].moveSnake(playerId, direction);
     },
-    startGame(roomId) {
-        rooms[roomId].startGame();
-    }
+    
 }
 
 export default lobby;

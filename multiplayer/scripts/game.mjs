@@ -31,10 +31,11 @@ export default class Game {
         playerId = playerId || `Player ${snakeIndex + 1}`;
         const snakeInitialX = (snakeIndex * 100) + 20;
         this.snakes.push(new Snake(playerId, snakeInitialX, 20, 20, colors[snakeIndex], controls[snakeIndex]));
+        console.log(`Added snake ${playerId}`, this.snakes);
     }
 
     addApple() {
-        this.apples.push(new Apple(this.getAliveSnakes(), 20));
+        this.apples.push(new Apple(this.getAliveSnakes(), 20, this.canvasWidth, this.canvasHeight));
     }
 
     checkEatenApples() {
@@ -90,7 +91,8 @@ export default class Game {
     start() {
         this.snakes = [];
         this.apples = [];
-
+         
+        
         if (this.numberOfPlayers > colors.length) {
             throw new Error("Too many players");
         }
