@@ -10,9 +10,7 @@
   main {
     flex: 1 0 auto;
   }
-  
  
-
  #screen {
   
     background-color: #000;
@@ -21,31 +19,7 @@
     opacity: 0.9;
     padding: 5px;
 }
- 
- .settings > .card {
-    height: 44vh;
-    
-}
-
-.flip-card-inner {
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-    margin-top: 20px;
-}
-
-.flip-card-front, .flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    /* Safari */
-    backface-visibility: hidden;
-}
-
-.flip-card-back {
-    transform: rotateY(180deg);
-}
-
+  
 .card {
     border-radius: 15px;
    

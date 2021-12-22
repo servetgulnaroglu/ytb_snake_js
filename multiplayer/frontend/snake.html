@@ -52,71 +52,66 @@
                     <div class="card">
                         <div class="card-content">
                             <span class="card-title">Settings</span>
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <div class="row">
-                                        <div class="col s12">
-                                            <label for="speed">Speed:</label>
-                                            <p class="range-field">
-                                                <input type="range" id="speed" min="5" max="25" value="15">
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <input type="number" id="players" min="1" max="4" value="2">
-                                            <label for="players">Players:</label>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <label for="apples">Apples:</label>
 
-                                            <input type="number" id="apples" min="1" max="10" value="1">
-                                        </div>
-                                    </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <label for="speed">Speed:</label>
+                                    <p class="range-field">
+                                        <input type="range" id="speed" min="5" max="25" value="15">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="number" id="players" min="1" max="4" value="2">
+                                    <label for="players">Players:</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <label for="apples">Apples:</label>
+
+                                    <input type="number" id="apples" min="1" max="10" value="1">
+                                </div>
+                            </div>
+ 
+                            <div class="row">
+                                <div class="col s12">
+                                    <button id="create-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Create
+                                        room</button>
 
                                 </div>
-                                <div class="flip-card-back">
-                                    <div class="row">
-                                        <div class="col s12">
-                                            <button id="create-room-button"
-                                                class="waves-effect waves-light btn green darken-1">Create
-                                                room</button>
 
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" id="room-id" disabled>
+                                    <label for="room-id">Room ID</label>
+                                </div>
 
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            <input type="text" id="room-id" disabled>
-                                            <label for="room-id">Room ID</label>
-                                        </div>
+                                <div class="input-field col s6">
+                                    <input type="text" id="player-id" disabled>
+                                    <label for="player-id">Player ID</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" id="room-id-input" disabled>
+                                    <label for="room-id-input">Room ID</label>
 
-                                        <div class="input-field col s6">
-                                            <input type="text" id="player-id" disabled>
-                                            <label for="player-id">Player ID</label>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s6">
-                                            <input type="text" id="room-id-input">
-                                            <label for="room-id-input">Room ID</label>
-
-                                        </div>
-                                        <div class="input-field col s6">
-                                            <button id="join-room-button"
-                                                class="waves-effect waves-light btn green darken-1">Join
-                                                room</button>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <button id="leave-room-button"
-                                                class="waves-effect waves-light btn green darken-1">Leave
-                                                room</button>
-                                        </div>
-                                    </div>
+                                </div>
+                                <div class="input-field col s6">
+                                    <button id="join-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Join
+                                        room</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <button id="leave-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Leave
+                                        room</button>
                                 </div>
                             </div>
                         </div>
@@ -133,96 +128,37 @@
             </div>
         </div>
     </footer>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-    <script type="module" src="../scripts/local/game.js"></script>
-    <script>
+    <script type="module">
+        import presentation from '../scripts/presentation.js';
+
         M.AutoInit();
+
+        window.addEventListener("resize", presentation.resizeGameArea);
+
+        const createRoom = document.getElementById("create-room-button");
+        const leaveRoom = document.getElementById("leave-room-button");
+        const joinRoom = document.getElementById("join-room-button");
+        
         const startButton = document.getElementById("start-button");
         const stopButton = document.getElementById("stop-button");
+
         const onlineSwitch = document.getElementById("online");
-        const cardInner = document.getElementsByClassName("flip-card-inner")[0];
-        const cardFront = document.getElementsByClassName("flip-card-front")[0];
-        const cardBack = document.getElementsByClassName("flip-card-back")[0];
-        const scanline = document.getElementById("scanline");
-        const canvas = document.getElementById("canvas");
+
         const screen = document.getElementById("screen");
-        const tv = document.getElementById("tv");
+ 
+        startButton.addEventListener("click", presentation.startGame);
+        stopButton.addEventListener("click", presentation.stopGameStart);
+        onlineSwitch.addEventListener("click", presentation.connectOnlineGame);
+       
+        screen.addEventListener("animationend", presentation.stopGameEnd);
 
-        resizeGameArea();
+        createRoom.addEventListener("click", presentation.createRoom);
+        leaveRoom.addEventListener("click", presentation.leaveRoom);
+        joinRoom.addEventListener("click", presentation.joinRoom);
 
-        startButton.addEventListener("click", function () {
-            const players = document.getElementById('players').value;
-            const apples = document.getElementById('apples').value;
-            const speed = document.getElementById('speed').value;
-
-            screen.classList.add("crt");
-            scanline.classList.add("scanline");
-            tv.style.backgroundColor = "white";
-            screen.classList.remove("turn-off");
-            startButton.disabled = true;
-            stopButton.disabled = false;
-            onlineSwitch.disabled = true;
-
-            try {
-
-                snakeGame.start(players, apples, speed);
-            }
-            catch (err) {
-                alert(err);
-            }
-        });
-
-        stopButton.addEventListener("click", function () {
-            tv.style.backgroundColor = "rgba(0,0,0,0.9)";
-
-            screen.classList.add("turn-off");
-            startButton.disabled = false;
-            stopButton.disabled = true;
-            onlineSwitch.disabled = false;
-        });
-
-
-        function toggleControls(cardSide, display) {
-            const buttons = cardSide.getElementsByTagName("button");
-            for (var i = 0; i < buttons.length; i++) {
-                buttons[i].style.display = display;
-            }
-            const inputs = cardSide.getElementsByTagName("input");
-            for (var i = 0; i < inputs.length; i++) {
-                inputs[i].style.display = display;
-            }
-        }
-
-        onlineSwitch.addEventListener("click", function (event, sender) {
-            const online = event.target.checked;
-            const transformValue = online ? "rotateY(180deg)" : "rotateY(0deg)";
-            cardInner.style.WebkitTransform = transformValue;
-            toggleControls(online ? cardBack : cardFront, "block");
-        });
-
-
-        screen.addEventListener("animationend", function () {
-            snakeGame.stop();
-            screen.classList.remove("crt");
-            scanline.classList.remove("scanline");
-            screen.classList.remove("turn-off");
-            tv.style.backgroundColor = "white";
-
-        });
-
-        cardInner.addEventListener('transitionend', () => {
-            const online = document.getElementById("online").checked
-            toggleControls(online ? cardFront : cardBack, "none");
-        });
-
-        function resizeGameArea() {
-            const width = tv.clientWidth+5;
-            const height = tv.clientHeight+5;
-            screen.style.width = `${width}px`;
-            screen.style.height = `${height}px`;
-            canvas.width = screen.clientWidth % 20 == 0 ? screen.clientWidth : screen.clientWidth - 20 - screen.clientWidth % 20;
-            canvas.height = screen.clientHeight % 20 == 0 ? screen.clientHeight : screen.clientHeight - 60 - screen.clientHeight % 20;
-        }
+        presentation.resizeGameArea();
     </script>
 </body>
 
