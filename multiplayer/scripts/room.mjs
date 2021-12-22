@@ -15,7 +15,7 @@ export default class Room {
             return;
         }
 
-        this.game.addSnake(playerId, controls[0]);
+        return this.game.addSnake(playerId, controls[0]);
     }
 
     leaveRoom(playerId) {

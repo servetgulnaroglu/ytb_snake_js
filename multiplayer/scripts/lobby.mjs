@@ -20,7 +20,7 @@ const lobby = {
     joinRoom(roomId, playerId) {
         const room = rooms[roomId];
         if (!room) return;
-        room.joinRoom(playerId);
+        return room.joinRoom(playerId);
     },
     leaveRoom(roomId, playerId) {
         const room = rooms[roomId];

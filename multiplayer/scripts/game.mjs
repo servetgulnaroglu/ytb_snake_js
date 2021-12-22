@@ -43,6 +43,7 @@ export default class Game {
         if (this.snakes.length == 1) {
             this.initializeApples();
         }
+        return playerId;
     }
 
     addApple() {

@@ -147,7 +147,9 @@ const presentation = {
         playerIdInput.disabled = true;
         roomIdInput.disabled = true;
         playerId = playerIdInput.value;
-        currentRoomId = await gameClient.createRoom(getGameSettings());
+        const roomCreationResponse  = await gameClient.createRoom(getGameSettings());
+        playerId = roomCreationResponse.playerId;
+        currentRoomId = roomCreationResponse.roomId;
         roomIdInput.value = currentRoomId;
         roomIdLabel.classList.add("active");
     },

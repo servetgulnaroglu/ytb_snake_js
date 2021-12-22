@@ -32,10 +32,10 @@ io.on('connection', function (socket) {
     socket.on('createRoom', function (gameSettings) {
         
         const roomId = lobby.createRoom(gameSettings);
-        lobby.joinRoom(roomId, gameSettings.playerId);
+        const playerId = lobby.joinRoom(roomId, gameSettings.playerId);
 
         // emit room id
-        socket.emit('createRoom', roomId);
+        socket.emit('createRoom', { roomId, playerId });
         console.log(`${socket.id} created room ${roomId}`);
     });
 
