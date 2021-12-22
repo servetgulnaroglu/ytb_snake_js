@@ -7,7 +7,7 @@ export default class SnakeRenderer {
     draw(state) {
         this.ctx.fillStyle = 'black';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
+        
         for (var snake of state.aliveSnakes) {
             this.ctx.fillStyle = snake.color;
             snake.tail.forEach(part => {
