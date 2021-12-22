@@ -57,15 +57,15 @@ io.on('connection', function (socket) {
     socket.on('updateState', function (roomId) {
         const state = lobby.updateState(roomId);
         socket.emit("updateState", state);   
-        console.log(`${socket.id} updated state of room ${roomId}`);    
-        console.log("state: ", state); 
+        
     });
 
     // move snake
     socket.on('moveSnake', function (settings) {
-        lobby.moveSnake(settings.roomId, socket.id, settings.direction);
-        socket.emit("moveSnake", {roomId, direction}); 
-        console.log(`${socket.id} moved snake in room ${roomId}`);
+         
+        lobby.moveSnake(settings.roomId, socket.id, settings.key);
+        socket.emit("moveSnake", settings);
+         
     });
     
      

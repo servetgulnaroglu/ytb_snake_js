@@ -8,10 +8,13 @@ export default class Apple {
     }
 
     setEmptyPlace(snakes) {
-        const snake = snakes[0];
+        
+
         while (true) {
-            const xCandidate = Math.floor(Math.random() * this.width / snake.size) * snake.size;
-            const yCandidate = Math.floor(Math.random() * this.height / snake.size) * snake.size;
+            
+            const xCandidate = Math.floor(Math.random() * this.width / this.size) * this.size;
+            const yCandidate = Math.floor(Math.random() * this.height / this.size) * this.size;
+         
             if (this.isEmptyPlace(snakes, xCandidate, yCandidate) && yCandidate > 0) {
                 this.x = xCandidate;
                 this.y = yCandidate;

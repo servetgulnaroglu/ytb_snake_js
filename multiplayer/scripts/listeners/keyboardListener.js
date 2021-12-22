@@ -11,7 +11,7 @@ export default class KeyboardListener {
             case keyMap.down:
             case keyMap.left:
             case keyMap.right:
-               game.keyPressed(event.key);
+               game.moveSnakeByKey(event.key);
             default:
                break;
          }

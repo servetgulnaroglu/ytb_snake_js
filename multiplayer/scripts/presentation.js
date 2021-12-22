@@ -40,6 +40,8 @@ function getGameSettings() {
     return {
         numberOfPlayers,
         numberOfApples,
+        canvasHeight: canvas.height,
+        canvasWidth: canvas.width
     }
 }
 
@@ -128,7 +130,7 @@ function stopGameloop() {
     cancelAnimationFrame(animationHandle);
     clearCanvas()
 }
-export default {
+const presentation = {
     resizeGameArea: function () {
         const width = tv.clientWidth + 5;
         const height = tv.clientHeight + 5;
@@ -153,7 +155,7 @@ export default {
         joinRoom.disabled = false;
         leaveRoom.disabled = true;
         roomIdToJoinInput.disabled = false;
-
+        this.stopGameStart();
         await gameClient.leaveRoom(currentRoomId);
         currentRoomId = null;
         roomIdInput.value = "";
@@ -168,8 +170,9 @@ export default {
         currentRoomId = await gameClient.joinRoom(roomIdToJoinInput.value);
         roomIdInput.value = currentRoomId;
         roomIdLabel.classList.add("active");
+        presentation.startGame();
     },
-    startGame: async function () {
+    startGame: function () {
         screen.classList.add("crt");
         scanline.classList.add("scanline");
         tv.style.backgroundColor = "white";
@@ -223,3 +226,4 @@ export default {
 
 }
 
+export default presentation;

@@ -26,8 +26,8 @@ const lobby = {
     updateState(roomId) {
         return rooms[roomId].updateState();
     },
-    moveSnake(roomId, playerId, direction) {
-        rooms[roomId].moveSnake(playerId, direction);
+    moveSnake(roomId, playerId, key) {
+        rooms[roomId].moveSnake(playerId, key);
     },
     
 }

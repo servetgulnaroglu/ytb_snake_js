@@ -12,13 +12,21 @@ export default class Game {
         this.numberOfApples = numberOfApples;
         this.snakes = [];
         this.apples = [];
+       
     }
+
+    initializeApples() {
+        for (let i = 0; i < this.numberOfApples; i++) {
+            this.addApple();
+        }
+    }
+
 
     getAliveSnakes() {
         return this.snakes.filter(snake => snake.alive);
     }
 
-    
+
     removeSnake(playerId) {
         const snake = this.snakes.find(snake => snake.playerId === playerId);
         if (snake) {
@@ -26,12 +34,14 @@ export default class Game {
         }
     }
 
-    addSnake(playerId) {
+    addSnake(playerId, keyMap) {
         const snakeIndex = this.snakes.length;
         playerId = playerId || `Player ${snakeIndex + 1}`;
         const snakeInitialX = (snakeIndex * 100) + 20;
-        this.snakes.push(new Snake(playerId, snakeInitialX, 20, 20, colors[snakeIndex], controls[snakeIndex]));
-        console.log(`Added snake ${playerId}`, this.snakes);
+        this.snakes.push(new Snake(playerId, snakeInitialX, 20, 20, colors[snakeIndex], keyMap || controls[snakeIndex]));
+        if (this.snakes.length == 1) {
+            this.initializeApples();
+        }
     }
 
     addApple() {
@@ -91,17 +101,15 @@ export default class Game {
     start() {
         this.snakes = [];
         this.apples = [];
-         
-        
+
+
         if (this.numberOfPlayers > colors.length) {
             throw new Error("Too many players");
         }
         for (let i = 0; i < this.numberOfPlayers; i++) {
             this.addSnake();
         }
-        for (let i = 0; i < this.numberOfApples; i++) {
-            this.addApple();
-        }
+       
     }
 
     updateState() {
@@ -110,34 +118,25 @@ export default class Game {
         this.checkEatenApples();
 
         return {
-            snakes: this.snakes, 
+            snakes: this.snakes,
             apples: this.apples,
             aliveSnakes: this.getAliveSnakes()
         }
     }
 
-    keyPressed(key) {
+    moveSnakeByPlayerId(playerId, key) {
+        const snake = this.snakes.find(snake => snake.playerId === playerId);
+        if (snake) {
+            snake.keyDown(key);
+        }
+    }
+
+    moveSnakeByKey(key) {
         const snake = this.getAliveSnakes().find(snake => snake.controls.up === key || snake.controls.down === key || snake.controls.left === key || snake.controls.right === key);
         if (snake) {
-            switch (key) {
-                case snake.controls.up:
-                    snake.turnUp();
-                    break;
-                case snake.controls.down:
-                    snake.turnDown();
-                    break;
-                case snake.controls.left:
-                    snake.turnLeft();
-                    break;
-                case snake.controls.right:
-                    snake.turnRight();
-                    break;
-                default:
-                    break;
-            }
+            snake.keyDown(key);
         }
     }
 }
- 
 
- 
+

@@ -47,8 +47,9 @@ const game = {
     joinRoom: async function (roomId) {
         return await asyncEmit("joinRoom", roomId);
     },
-    moveSnake: async function (roomId, direction) {
-        return await asyncEmit("moveSnake", {roomId, direction});
+    moveSnake: async function (roomId, key) {
+         
+        return await asyncEmit("moveSnake", {roomId, key});
     },
     updateState: async function (roomId) {
         return await asyncEmit("updateState", roomId);

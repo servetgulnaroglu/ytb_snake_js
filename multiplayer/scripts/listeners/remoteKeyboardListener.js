@@ -1,11 +1,9 @@
 import controls from '../controls.mjs';
-import gameClient from '../gameClient.js';
+ 
 export default class RemoveKeyboardListener {
-
-    
-
-
-    listen(event, gameClient, roomId) {
+ 
+    async listen(event, gameClient, roomId) {
+        const { key } = event;
         if (!gameClient || !roomId) {   
               return;
         }
@@ -16,7 +14,7 @@ export default class RemoveKeyboardListener {
             case keys.down:
             case keys.left:
             case keys.right:
-                this.gameClient.moveSnake(this.roomId, event.key);
+                await gameClient.moveSnake(roomId, event.key);
                 break;
             default:
                 break;

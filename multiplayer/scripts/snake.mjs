@@ -24,9 +24,27 @@ export default class Snake {
         this.head = this.tail[this.tail.length - 1];
         
         this.acceptInput  = true;
-        
-       
     }
+
+    keyDown(key) {
+ 
+        switch (key) {
+            case this.controls.up:
+                this.turnUp();
+                break;
+            case this.controls.down:
+                this.turnDown();
+                break;
+            case this.controls.left:
+                this.turnLeft();
+                break;
+            case this.controls.right:
+                this.turnRight();
+                break;
+            default:
+                break;
+        }
+    } 
 
     turnLeft() {
         if (!this.acceptInput || this.rotateX === 1)
