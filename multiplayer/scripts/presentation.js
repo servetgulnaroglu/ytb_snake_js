@@ -41,7 +41,8 @@ function getGameSettings() {
         numberOfPlayers,
         numberOfApples,
         canvasHeight: canvas.height,
-        canvasWidth: canvas.width
+        canvasWidth: canvas.width,
+        playerId
     }
 }
 
@@ -70,33 +71,30 @@ function startOnlineGame() {
     const keyboardListener = new RemoteKeyboardListener();
 
     window.addEventListener("keydown", function (event) {
-        keyboardListener.listen(event, gameClient, currentRoomId);
+        keyboardListener.listen(event, gameClient, playerId, currentRoomId);
     });
 
     animationHandle = requestAnimationFrame(gameLoop);
 }
 
-function stopLocalGameStart() {
-    tv.style.backgroundColor = "rgba(0,0,0,0.9)";
-    screen.classList.add("turn-off");
-    startButton.disabled = false;
-    stopButton.disabled = true;
-    onlineSwitch.disabled = false;
+async function stopLocalGameStart() {
+
 }
 
-function stopOnlineGameStart() {
-
+async function stopOnlineGameStart() {
+    if (currentRoomId) {
+        await gameClient.leaveRoom(currentRoomId, playerId);
+    }
 }
 
 function stopLocalGameEnd() {
 
-    stopGameloop()
 
-    screen.classList.remove("crt");
-    scanline.classList.remove("scanline");
-    screen.classList.remove("turn-off");
-    tv.style.backgroundColor = "white";
 }
+
+function stopOnlineGameEnd() {
+    
+}	
 
 async function gameLoop(timestamp) {
     const speed = document.getElementById('speed').value;
@@ -107,7 +105,9 @@ async function gameLoop(timestamp) {
 
     lastFrameTimestamp = timestamp;
     const newState = currentGame ? currentGame.updateState() : await gameClient.updateState(currentRoomId);
-    draw(newState);
+    if (newState) {
+        draw(newState);
+    }
     animationHandle = requestAnimationFrame(gameLoop);
 }
 
@@ -146,6 +146,7 @@ const presentation = {
         roomIdToJoinInput.disabled = true;
         playerIdInput.disabled = true;
         roomIdInput.disabled = true;
+        playerId = playerIdInput.value;
         currentRoomId = await gameClient.createRoom(getGameSettings());
         roomIdInput.value = currentRoomId;
         roomIdLabel.classList.add("active");
@@ -155,8 +156,8 @@ const presentation = {
         joinRoom.disabled = false;
         leaveRoom.disabled = true;
         roomIdToJoinInput.disabled = false;
-        this.stopGameStart();
-        await gameClient.leaveRoom(currentRoomId);
+        await presentation.stopGameStart();
+        await gameClient.leaveRoom(currentRoomId, playerId);
         currentRoomId = null;
         roomIdInput.value = "";
         roomIdLabel.classList.remove("active");
@@ -166,8 +167,8 @@ const presentation = {
         joinRoom.disabled = true;
         leaveRoom.disabled = false;
         roomIdToJoinInput.disabled = true;
-
-        currentRoomId = await gameClient.joinRoom(roomIdToJoinInput.value);
+        playerId = playerIdInput.value;
+        currentRoomId = (await gameClient.joinRoom(roomIdToJoinInput.value, playerId)).roomId;
         roomIdInput.value = currentRoomId;
         roomIdLabel.classList.add("active");
         presentation.startGame();
@@ -189,8 +190,10 @@ const presentation = {
 
         if (online) {
             // connect socket 
-            playerId = await gameClient.connectAsync();
-            playerIdLabel.classList.add("active");
+            await gameClient.connectAsync();
+            playerIdInput.disabled = false;
+            
+            // playerIdLabel.classList.add("active");
             createRoom.disabled = false;
             joinRoom.disabled = false;
             roomIdToJoinInput.disabled = false;
@@ -198,7 +201,7 @@ const presentation = {
         } else {
             // disconnect socket
             if (currentRoomId) {
-                await gameClient.leaveRoom(currentRoomId);
+                await gameClient.leaveRoom(currentRoomId, playerId);
                 currentRoomId = null;
                 roomIdInput.value = "";
                 roomIdLabel.classList.remove("active");
@@ -208,22 +211,31 @@ const presentation = {
             }
 
             await gameClient.disconnectAsync();
-            playerId = null;
-            playerIdLabel.classList.remove("active");
+            // playerId = null;
+            // playerIdLabel.classList.remove("active");
         }
         playerIdInput.value = playerId;
 
     },
-    stopGameStart: function () {
+    stopGameStart: async function () {
+        tv.style.backgroundColor = "rgba(0,0,0,0.9)";
+        screen.classList.add("turn-off");
+        startButton.disabled = false;
+        stopButton.disabled = true;
+        onlineSwitch.disabled = false;
         const stopHandler = online.checked ? stopOnlineGameStart : stopLocalGameStart;
-        stopHandler();
+        await stopHandler();
     },
     stopGameEnd: function () {
+        stopGameloop()
+        screen.classList.remove("crt");
+        scanline.classList.remove("scanline");
+        screen.classList.remove("turn-off");
+        tv.style.backgroundColor = "white";
         const stopHandler = online.checked ? stopOnlineGameEnd : stopLocalGameEnd;
         stopHandler();
+        currentGame = null;
     },
-
-
 }
 
 export default presentation;

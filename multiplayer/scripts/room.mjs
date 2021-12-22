@@ -4,17 +4,27 @@ export default class Room {
     constructor(ownerId, roomId, gameSettings) {
         this.ownerId = ownerId;
         this.roomId = roomId;
-        const { numberOfApples, numberOfPlayers, canvasHeight, canvasWidth } = gameSettings 
-      
+        const { numberOfApples, numberOfPlayers, canvasHeight, canvasWidth } = gameSettings
+
         this.game = new Game(canvasWidth, canvasHeight, numberOfPlayers, numberOfApples);
     }
- 
-    joinRoom(playerId) {    
-         this.game.addSnake(playerId, controls[0]);
+
+    joinRoom(playerId) {
+        //check if player is already in room
+        if (this.game.snakes.find(snake => snake.playerId == playerId)) {
+            return;
+        }
+
+        this.game.addSnake(playerId, controls[0]);
     }
 
     leaveRoom(playerId) {
-        this.game.removeSnake(playerId);
+   
+        if (playerId == this.ownerId) {
+            this.game.end();
+        } else {
+            this.game.removeSnake(playerId);
+        }
     }
 
     updateState() {
@@ -22,9 +32,9 @@ export default class Room {
     }
 
     moveSnake(playerId, key) {
-        
+
         this.game.moveSnakeByPlayerId(playerId, key);
     }
 
-     
+
 } 

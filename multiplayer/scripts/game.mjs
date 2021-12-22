@@ -29,8 +29,9 @@ export default class Game {
 
     removeSnake(playerId) {
         const snake = this.snakes.find(snake => snake.playerId === playerId);
+        
         if (snake) {
-            this.snakes.slice(this.snakes.indexOf(snake), 1);
+            this.snakes.splice(this.snakes.indexOf(snake), 1);
         }
     }
 
@@ -120,7 +121,7 @@ export default class Game {
         return {
             snakes: this.snakes,
             apples: this.apples,
-            aliveSnakes: this.getAliveSnakes()
+            aliveSnakes: this.getAliveSnakes() || [],
         }
     }
 
@@ -136,6 +137,11 @@ export default class Game {
         if (snake) {
             snake.keyDown(key);
         }
+    }
+
+    end() {
+        this.snakes = [];
+        this.apples = [];
     }
 }
 

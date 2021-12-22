@@ -31,8 +31,8 @@ io.on('connection', function (socket) {
     // create room
     socket.on('createRoom', function (gameSettings) {
         
-        const roomId = lobby.createRoom(socket.id, gameSettings);
-        lobby.joinRoom(roomId, socket.id);
+        const roomId = lobby.createRoom(gameSettings);
+        lobby.joinRoom(roomId, gameSettings.playerId);
 
         // emit room id
         socket.emit('createRoom', roomId);
@@ -40,17 +40,17 @@ io.on('connection', function (socket) {
     });
 
     // join room
-    socket.on('joinRoom', function (roomId) {
-        lobby.joinRoom(roomId, socket.id);
-        socket.emit("joinRoom", roomId);
-        console.log(`${socket.id} joined room ${roomId}`);
+    socket.on('joinRoom', function (data) {
+        lobby.joinRoom(data.roomId, data.playerId);
+        socket.emit("joinRoom", data);
+        console.log(`${data.playerId} joined room ${data.roomId}`);
     });
 
     // leave room
-    socket.on('leaveRoom', function (roomId) {
-        lobby.leaveRoom(roomId, socket.id);
-        socket.emit("leaveRoom", roomId);
-        console.log(`${socket.id} left room ${roomId}`);
+    socket.on('leaveRoom', function (data) {
+        lobby.leaveRoom(data.roomId, data.playerId);
+        socket.emit("leaveRoom", data);
+        console.log(`${data.playerId} left room ${data.roomId}`);
     });
 
     // update state
@@ -63,7 +63,7 @@ io.on('connection', function (socket) {
     // move snake
     socket.on('moveSnake', function (settings) {
          
-        lobby.moveSnake(settings.roomId, socket.id, settings.key);
+        lobby.moveSnake(settings.roomId, settings.playerId, settings.key);
         socket.emit("moveSnake", settings);
          
     });

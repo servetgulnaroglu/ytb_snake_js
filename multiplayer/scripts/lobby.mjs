@@ -12,24 +12,36 @@ function generateUniqueRoomId() {
 }
 
 const lobby = {
-    createRoom: function (ownerId, gameSettings) {
+    createRoom: function (gameSettings) {
         const roomId = generateUniqueRoomId();
-        rooms[roomId] = new Room(ownerId, roomId, gameSettings);
+        rooms[roomId] = new Room(gameSettings.playerId, roomId, gameSettings);
         return roomId;
     },
     joinRoom(roomId, playerId) {
-        rooms[roomId].joinRoom(playerId);
+        const room = rooms[roomId];
+        if (!room) return;
+        room.joinRoom(playerId);
     },
     leaveRoom(roomId, playerId) {
-        rooms[roomId].leaveRoom(playerId);
+        const room = rooms[roomId];
+        if (!room) return;
+        room.leaveRoom(playerId);
+        if (room.ownerId == playerId) {
+            delete rooms[roomId];
+        }
     },
     updateState(roomId) {
-        return rooms[roomId].updateState();
+        const room = rooms[roomId];
+        if (!room) return;
+        return room.updateState();
+
     },
     moveSnake(roomId, playerId, key) {
-        rooms[roomId].moveSnake(playerId, key);
+        const room = rooms[roomId];
+        if (!room) return;
+        room.moveSnake(playerId, key);
     },
-    
+
 }
 
 export default lobby;

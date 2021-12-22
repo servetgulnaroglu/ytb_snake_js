@@ -41,15 +41,15 @@ const game = {
     createRoom: async function (gameSettings) {
         return await asyncEmit("createRoom", gameSettings);
     },
-    leaveRoom: async function (roomId) {
-        return await asyncEmit("leaveRoom", roomId);
+    leaveRoom: async function (roomId, playerId) {
+        return await asyncEmit("leaveRoom", { roomId, playerId });
     },
-    joinRoom: async function (roomId) {
-        return await asyncEmit("joinRoom", roomId);
+    joinRoom: async function (roomId, playerId) {
+        return await asyncEmit("joinRoom", { roomId, playerId });
     },
-    moveSnake: async function (roomId, key) {
+    moveSnake: async function (roomId, playerId, key) {
          
-        return await asyncEmit("moveSnake", {roomId, key});
+        return await asyncEmit("moveSnake", {roomId, playerId, key});
     },
     updateState: async function (roomId) {
         return await asyncEmit("updateState", roomId);
