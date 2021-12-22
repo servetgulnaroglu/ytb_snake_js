@@ -37,7 +37,7 @@ export default class Game {
 
     addSnake(playerId, keyMap) {
         const snakeIndex = this.snakes.length;
-        playerId = playerId || `Player ${snakeIndex + 1}`;
+        playerId = playerId || `Player${snakeIndex + 1}`;
         const snakeInitialX = (snakeIndex * 100) + 20;
         this.snakes.push(new Snake(playerId, snakeInitialX, 20, 20, colors[snakeIndex], keyMap || controls[snakeIndex]));
         if (this.snakes.length == 1) {
