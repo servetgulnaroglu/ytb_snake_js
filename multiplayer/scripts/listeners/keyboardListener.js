@@ -1,23 +1,16 @@
 import controls from '../controls.mjs';
 export default class KeyboardListener {
-   listen(event, game) {
-      if (!game) {
-         return;
-      }
-      
+   listen(event, keyboardHandler) {
       for (const keyMap of controls) {
-         switch(event.key){
+         switch (event.key) {
             case keyMap.up:
             case keyMap.down:
             case keyMap.left:
             case keyMap.right:
-               game.moveSnakeByKey(event.key);
+               keyboardHandler(event.key);
             default:
                break;
          }
       }
    }
-
-
-
 }

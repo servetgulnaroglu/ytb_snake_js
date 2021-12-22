@@ -1,7 +1,7 @@
 import gameClient from "./gameClient.js";
 import Game from "./game.mjs";
 import KeyboardListener from './listeners/keyboardListener.js';
-import RemoteKeyboardListener from './listeners/remoteKeyboardListener.js';
+import SwipeGestureListener from './listeners/swipeGestureListener.js';
 import ScoreRenderer from './renderers/scoreRenderer.js';
 import SnakeRenderer from './renderers/snakeRenderer.js';
 import AppleRenderer from './renderers/appleRenderer.js';
@@ -22,7 +22,6 @@ const roomIdToJoinInput = document.getElementById("room-id-input");
 const leaveRoom = document.getElementById("leave-room-button");
 
 const playerIdInput = document.getElementById("player-id");
-const playerIdLabel = playerIdInput.labels[0];
 const roomIdInput = document.getElementById("room-id");
 const roomIdLabel = roomIdInput.labels[0];
 
@@ -47,39 +46,34 @@ function getGameSettings() {
 }
 
 function startLocalGame() {
+    const gameSettings = getGameSettings();
+    currentGame = new Game(canvas.width, canvas.height, gameSettings.numberOfPlayers, gameSettings.numberOfApples);
+    currentGame.start();
+}
 
-
-    try {
-        const gameSettings = getGameSettings();
-        currentGame = new Game(canvas.width, canvas.height, gameSettings.numberOfPlayers, gameSettings.numberOfApples);
-        currentGame.start();
-        const keyboardListener = new KeyboardListener();
-
-        window.addEventListener("keydown", function (event) {
-            keyboardListener.listen(event, currentGame);
-        });
-
-        animationHandle = requestAnimationFrame(gameLoop);
+function keyboardHandler(key)
+{
+    if (currentGame) {
+        currentGame.moveSnakeByKey(key);
+    } else if (currentRoomId) {
+        gameClient.moveSnake(currentRoomId, playerId, key);
     }
-    catch (err) {
-        alert(err);
-    }
-
 }
 
-function startOnlineGame() {
-    const keyboardListener = new RemoteKeyboardListener();
+function swipeGestureHandler(direction) {
+   // map swipe direction to keyboard key
+    const key = {
+        "left": "ArrowLeft",
+        "right": "ArrowRight",
+        "up": "ArrowUp",
+        "down": "ArrowDown"
+    }[direction];
 
-    window.addEventListener("keydown", function (event) {
-        keyboardListener.listen(event, gameClient, playerId, currentRoomId);
-    });
-
-    animationHandle = requestAnimationFrame(gameLoop);
+    keyboardHandler(key);
 }
 
-async function stopLocalGameStart() {
-
-}
+ 
+ 
 
 async function stopOnlineGameStart() {
     if (currentRoomId) {
@@ -87,14 +81,7 @@ async function stopOnlineGameStart() {
     }
 }
 
-function stopLocalGameEnd() {
-
-
-}
-
-function stopOnlineGameEnd() {
-    
-}	
+ 
 
 async function gameLoop(timestamp) {
     const speed = document.getElementById('speed').value;
@@ -147,7 +134,7 @@ const presentation = {
         playerIdInput.disabled = true;
         roomIdInput.disabled = true;
         playerId = playerIdInput.value;
-        const roomCreationResponse  = await gameClient.createRoom(getGameSettings());
+        const roomCreationResponse = await gameClient.createRoom(getGameSettings());
         playerId = roomCreationResponse.playerId;
         currentRoomId = roomCreationResponse.roomId;
         roomIdInput.value = currentRoomId;
@@ -176,28 +163,55 @@ const presentation = {
         presentation.startGame();
     },
     startGame: function () {
-        screen.classList.add("crt");
-        scanline.classList.add("scanline");
-        tv.style.backgroundColor = "white";
-        screen.classList.remove("turn-off");
-        startButton.disabled = true;
-        stopButton.disabled = false;
-        onlineSwitch.disabled = true;
-        const startHandler = online.checked ? startOnlineGame : startLocalGame;
-        startHandler();
+        try {
+            if (!online.checked) {
+                startLocalGame();
+            }
+
+            const keyboardListener = new KeyboardListener();
+            const swipeGestureListener = new SwipeGestureListener();
+
+            // listen for swipe gestures
+            window.addEventListener('touchstart', function (e) {
+                swipeGestureListener.listen(e);
+            });
+
+            window.addEventListener('touchend', function (e) {
+                swipeGestureListener.listen(e, swipeGestureHandler);
+            });
+
+
+            window.addEventListener("keydown", function (event) {
+                keyboardListener.listen(event, keyboardHandler);
+            });
+        
+            animationHandle = requestAnimationFrame(gameLoop);
+            screen.classList.add("crt");
+            scanline.classList.add("scanline");
+            tv.style.backgroundColor = "white";
+            screen.classList.remove("turn-off");
+            startButton.disabled = true;
+            stopButton.disabled = false;
+            onlineSwitch.disabled = true;
+           
+        }
+        catch (err) {
+            alert(err);
+
+        }
     },
     connectOnlineGame: async function (event) {
         const online = event.target.checked;
 
         playerIdInput.disabled =
-        roomIdToJoinInput.disabled =
-        createRoom.disabled = 
-        joinRoom.disabled = !online;
+            roomIdToJoinInput.disabled =
+            createRoom.disabled =
+            joinRoom.disabled = !online;
 
         if (online) {
             // connect socket 
             await gameClient.connectAsync();
- 
+
         } else {
             // disconnect socket
             if (currentRoomId) {
@@ -206,7 +220,7 @@ const presentation = {
                 roomIdInput.value = "";
                 roomIdLabel.classList.remove("active");
             }
-           
+
             await gameClient.disconnectAsync();
             // playerId = null;
             // playerIdLabel.classList.remove("active");
@@ -220,8 +234,10 @@ const presentation = {
         startButton.disabled = false;
         stopButton.disabled = true;
         onlineSwitch.disabled = false;
-        const stopHandler = online.checked ? stopOnlineGameStart : stopLocalGameStart;
-        await stopHandler();
+        if ( online.checked) {
+            await stopOnlineGameStart();
+        } 
+        
     },
     stopGameEnd: function () {
         stopGameloop()
@@ -229,10 +245,11 @@ const presentation = {
         scanline.classList.remove("scanline");
         screen.classList.remove("turn-off");
         tv.style.backgroundColor = "white";
-        const stopHandler = online.checked ? stopOnlineGameEnd : stopLocalGameEnd;
-        stopHandler();
         currentGame = null;
     },
+   
+        
+
 }
 
 export default presentation;
