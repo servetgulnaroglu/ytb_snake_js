@@ -14,7 +14,7 @@ export default class SwipeGestureListener {
       }
    }
 
-   SWIPE_MIN_LENGTH = 150;
+   SWIPE_MIN_LENGTH = 10;
 
    handleSwipe(swipeGestureHandler) {
       const xDiff = this.endX - this.startX;
