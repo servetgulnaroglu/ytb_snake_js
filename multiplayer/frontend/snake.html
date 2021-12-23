@@ -16,7 +16,7 @@
 <body>
     <main>
         <div class="row">
-            <div class="col m12 l8">
+            <div class="col l8 m12 s12">
                 <div id="tv" class="card">
                     <div id="screen" class="card-content">
                         <div id="scanline"></div>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col m12 l4">
+            <div class="col l4 m12 s12">
                 <div class="settings">
                     <div class="card">
                         <div class="card-content">
@@ -131,6 +131,9 @@
 
         window.addEventListener("resize", presentation.resizeGameArea);
 
+        // resize game area on document ready
+        window.addEventListener("load", presentation.resizeGameArea);
+
         const createRoom = document.getElementById("create-room-button");
         const leaveRoom = document.getElementById("leave-room-button");
         const joinRoom = document.getElementById("join-room-button");
@@ -151,8 +154,8 @@
         createRoom.addEventListener("click", presentation.createRoom);
         leaveRoom.addEventListener("click", presentation.leaveRoom);
         joinRoom.addEventListener("click", presentation.joinRoom);
-
-        presentation.resizeGameArea();
+        presentation.disablePageScrollOnCanvas();
+        
     </script>
 </body>
 

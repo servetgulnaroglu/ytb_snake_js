@@ -6,6 +6,8 @@ import ScoreRenderer from './renderers/scoreRenderer.js';
 import SnakeRenderer from './renderers/snakeRenderer.js';
 import AppleRenderer from './renderers/appleRenderer.js';
 
+const main = document.getElementsByTagName('main')[0];
+const footer = document.getElementsByTagName('footer')[0];
 const startButton = document.getElementById("start-button");
 const stopButton = document.getElementById("stop-button");
 const onlineSwitch = document.getElementById("online");
@@ -31,6 +33,7 @@ let animationHandle, lastFrameTimestamp = null;
 let playerId = null;
 let currentRoomId = null;
 let currentGame = null;
+ 
 
 function getGameSettings() {
     const numberOfPlayers = document.getElementById('players').value;
@@ -47,12 +50,11 @@ function getGameSettings() {
 
 function startLocalGame() {
     const gameSettings = getGameSettings();
-    currentGame = new Game(canvas.width, canvas.height, gameSettings.numberOfPlayers, gameSettings.numberOfApples);
+    currentGame = new Game(gameSettings);
     currentGame.start();
 }
 
-function keyboardHandler(key)
-{
+function keyboardHandler(key) {
     if (currentGame) {
         currentGame.moveSnakeByKey(key);
     } else if (currentRoomId) {
@@ -61,7 +63,7 @@ function keyboardHandler(key)
 }
 
 function swipeGestureHandler(direction) {
-   // map swipe direction to keyboard key
+    // map swipe direction to keyboard key
     const key = {
         "left": "ArrowLeft",
         "right": "ArrowRight",
@@ -72,8 +74,8 @@ function swipeGestureHandler(direction) {
     keyboardHandler(key);
 }
 
- 
- 
+
+
 
 async function stopOnlineGameStart() {
     if (currentRoomId) {
@@ -81,7 +83,7 @@ async function stopOnlineGameStart() {
     }
 }
 
- 
+
 
 async function gameLoop(timestamp) {
     const speed = document.getElementById('speed').value;
@@ -120,7 +122,9 @@ function stopGameloop() {
 const presentation = {
     resizeGameArea: function () {
         const width = tv.clientWidth + 5;
-        const height = tv.clientHeight + 5;
+        const height = main.clientHeight < width
+            ? main.clientHeight - footer.offsetHeight - 10
+            : tv.clientHeight;
         screen.style.width = `${width}px`;
         screen.style.height = `${height}px`;
         canvas.width = screen.clientWidth % 20 == 0 ? screen.clientWidth : screen.clientWidth - 20 - screen.clientWidth % 20;
@@ -184,7 +188,7 @@ const presentation = {
             window.addEventListener("keydown", function (event) {
                 keyboardListener.listen(event, keyboardHandler);
             });
-        
+
             animationHandle = requestAnimationFrame(gameLoop);
             screen.classList.add("crt");
             scanline.classList.add("scanline");
@@ -193,7 +197,7 @@ const presentation = {
             startButton.disabled = true;
             stopButton.disabled = false;
             onlineSwitch.disabled = true;
-           
+
         }
         catch (err) {
             alert(err);
@@ -234,10 +238,10 @@ const presentation = {
         startButton.disabled = false;
         stopButton.disabled = true;
         onlineSwitch.disabled = false;
-        if ( online.checked) {
+        if (online.checked) {
             await stopOnlineGameStart();
-        } 
-        
+        }
+
     },
     stopGameEnd: function () {
         stopGameloop()
@@ -247,8 +251,12 @@ const presentation = {
         tv.style.backgroundColor = "white";
         currentGame = null;
     },
-   
-        
+    disablePageScrollOnCanvas: function () {
+        canvas.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, { passive: false });
+    }
+
 
 }
 

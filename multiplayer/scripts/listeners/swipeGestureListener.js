@@ -30,7 +30,7 @@ export default class SwipeGestureListener {
 
    getSwipeDirection(xDiff, yDiff) {
       const angle = this.getAngle(xDiff, yDiff);
-
+      console.log(angle);
       switch (angle) {
          case 0:
             return "right";
@@ -41,7 +41,7 @@ export default class SwipeGestureListener {
          case 3:
             return "left";
       }
-
+     
    }
 
    getAngle(xDiff, yDiff) {

@@ -5,11 +5,11 @@ import colors from './colors.mjs';
 import controls from './controls.mjs';
 
 export default class Game {
-    constructor(canvasWidth, canvasHeight, numberOfPlayers, numberOfApples) {
-        this.canvasWidth = canvasWidth;
-        this.canvasHeight = canvasHeight;
-        this.numberOfPlayers = numberOfPlayers;
-        this.numberOfApples = numberOfApples;
+    constructor(gameSettings) {
+        this.canvasWidth = gameSettings.canvasWidth;
+        this.canvasHeight = gameSettings.canvasHeight;
+        this.numberOfPlayers = gameSettings.numberOfPlayers;
+        this.numberOfApples = gameSettings.numberOfApples;
         this.snakes = [];
         this.apples = [];
        

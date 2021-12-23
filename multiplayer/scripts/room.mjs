@@ -4,9 +4,7 @@ export default class Room {
     constructor(ownerId, roomId, gameSettings) {
         this.ownerId = ownerId;
         this.roomId = roomId;
-        const { numberOfApples, numberOfPlayers, canvasHeight, canvasWidth } = gameSettings
-
-        this.game = new Game(canvasWidth, canvasHeight, numberOfPlayers, numberOfApples);
+        this.game = new Game(gameSettings);
     }
 
     joinRoom(playerId) {
