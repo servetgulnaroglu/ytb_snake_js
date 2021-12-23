@@ -5,6 +5,7 @@ export default class Room {
         this.ownerId = ownerId;
         this.roomId = roomId;
         this.game = new Game(gameSettings);
+        this.speed = gameSettings.speed;
     }
 
     joinRoom(playerId) {
@@ -13,7 +14,12 @@ export default class Room {
             return;
         }
 
-        return this.game.addSnake(playerId, controls[0]);
+        const acceptedPlayerId = this.game.addSnake(playerId, controls[0]);
+        return {
+            speed: this.speed,
+            roomId: this.roomId,
+            playerId: acceptedPlayerId,
+        }
     }
 
     leaveRoom(playerId) {

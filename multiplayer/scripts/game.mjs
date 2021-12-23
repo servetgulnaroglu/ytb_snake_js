@@ -11,8 +11,7 @@ export default class Game {
         this.numberOfPlayers = gameSettings.numberOfPlayers;
         this.numberOfApples = gameSettings.numberOfApples;
         this.snakes = [];
-        this.apples = [];
-       
+        this.apples = [];   
     }
 
     initializeApples() {

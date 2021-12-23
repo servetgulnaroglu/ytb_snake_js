@@ -33,23 +33,25 @@ let animationHandle, lastFrameTimestamp = null;
 let playerId = null;
 let currentRoomId = null;
 let currentGame = null;
- 
+let currentSpeed = 15;
 
 function getGameSettings() {
     const numberOfPlayers = document.getElementById('players').value;
     const numberOfApples = document.getElementById('apples').value;
-
+    const speed = document.getElementById('speed').value;
     return {
         numberOfPlayers,
         numberOfApples,
         canvasHeight: canvas.height,
         canvasWidth: canvas.width,
-        playerId
+        playerId,
+        speed 
     }
 }
 
 function startLocalGame() {
     const gameSettings = getGameSettings();
+    currentSpeed = gameSettings.speed;
     currentGame = new Game(gameSettings);
     currentGame.start();
 }
@@ -86,8 +88,8 @@ async function stopOnlineGameStart() {
 
 
 async function gameLoop(timestamp) {
-    const speed = document.getElementById('speed').value;
-    if (timestamp < lastFrameTimestamp + (1000 / speed)) {
+    
+    if (timestamp < lastFrameTimestamp + (1000 / currentSpeed)) {
         animationHandle = requestAnimationFrame(gameLoop);
         return;
     }
@@ -160,8 +162,11 @@ const presentation = {
         joinRoom.disabled = true;
         leaveRoom.disabled = false;
         roomIdToJoinInput.disabled = true;
-        playerId = playerIdInput.value;
-        currentRoomId = (await gameClient.joinRoom(roomIdToJoinInput.value, playerId)).roomId;
+        const joinRoomResponse  = await gameClient.joinRoom(roomIdToJoinInput.value, playerId);
+        currentRoomId = joinRoomResponse.roomId;
+        playerId = joinRoomResponse.playerId;
+        currentSpeed = joinRoomResponse.speed;
+        playerIdInput.value = playerId;
         roomIdInput.value = currentRoomId;
         roomIdLabel.classList.add("active");
         presentation.startGame();
@@ -172,6 +177,7 @@ const presentation = {
                 startLocalGame();
             }
 
+           
             const keyboardListener = new KeyboardListener();
             const swipeGestureListener = new SwipeGestureListener();
 

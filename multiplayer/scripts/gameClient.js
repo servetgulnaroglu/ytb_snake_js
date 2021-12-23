@@ -12,7 +12,7 @@ async function asyncEmit(eventName, data) {
     })); 
 }
 
-const game = {
+const gameClient = {
     connectAsync: async function () {
         const playerId = await (new Promise(function (resolve, reject) {
             try {
@@ -47,12 +47,12 @@ const game = {
     joinRoom: async function (roomId, playerId) {
         return await asyncEmit("joinRoom", { roomId, playerId });
     },
-    moveSnake: async function (roomId, playerId, key) {
-        return await asyncEmit("moveSnake", {roomId, playerId, key});
+    moveSnake: function (roomId, playerId, key) {
+        return asyncEmit("moveSnake", {roomId, playerId, key});
     },
     updateState: async function (roomId) {
         return await asyncEmit("updateState", roomId);
     }
 }
 
-export default game;
+export default gameClient;

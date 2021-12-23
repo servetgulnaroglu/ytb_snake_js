@@ -32,18 +32,18 @@ io.on('connection', function (socket) {
     socket.on('createRoom', function (gameSettings) {
         
         const roomId = lobby.createRoom(gameSettings);
-        const playerId = lobby.joinRoom(roomId, gameSettings.playerId);
+        const joinRoomResponse = lobby.joinRoom(roomId, gameSettings.playerId);
 
         // emit room id
-        socket.emit('createRoom', { roomId, playerId });
-        console.log(`${socket.id} created room ${roomId}`);
+        socket.emit('createRoom', joinRoomResponse );
+        console.log(`${joinRoomResponse.playerId} created room ${joinRoomResponse.roomId}`);
     });
 
     // join room
     socket.on('joinRoom', function (data) {
-        lobby.joinRoom(data.roomId, data.playerId);
-        socket.emit("joinRoom", data);
-        console.log(`${data.playerId} joined room ${data.roomId}`);
+        const response = lobby.joinRoom(data.roomId, data.playerId);
+        socket.emit("joinRoom", response );
+        console.log(`${response .playerId} joined room ${response.roomId}`);
     });
 
     // leave room
