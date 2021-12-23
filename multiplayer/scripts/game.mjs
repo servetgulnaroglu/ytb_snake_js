@@ -103,7 +103,6 @@ export default class Game {
     start() {
         this.snakes = [];
         this.apples = [];
-        console.log("number of appes", this.numberOfApples);
         if (this.numberOfApples > 10) {
             throw new Error('Too many apples. Limit is 10');
         }

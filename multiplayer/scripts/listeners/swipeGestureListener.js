@@ -31,20 +31,27 @@ export default class SwipeGestureListener {
    getSwipeDirection(xDiff, yDiff) {
       const angle = this.getAngle(xDiff, yDiff);
       console.log(angle);
-      switch (angle) {
-         case 0:
-            return "right";
-         case 1:
-            return "up";
-         case 2:
-            return "down";
-         case 3:
-            return "left";
+      // swipe left
+      if (angle <= -45 && angle >= -135) {
+         return "up";
+      }
+      // swipe right
+      if (angle >= 45 && angle <= 135) {
+         return "down";
+      }
+      // swipe down
+      if (angle >= -45 && angle <= 45) {
+         return "right";
+      }
+      // swipe up
+      if (angle >= 170 || angle <= -170) {
+         return "left";
       }
      
    }
 
    getAngle(xDiff, yDiff) {
-      return Math.abs(Math.round(Math.atan2(yDiff, xDiff)));
+      const angle = Math.atan2(yDiff, xDiff);
+      return Math.round(angle * 180 / Math.PI);
    }
 }
