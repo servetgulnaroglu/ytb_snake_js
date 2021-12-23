@@ -33,18 +33,25 @@ export default class SwipeGestureListener {
       console.log(angle);
       // swipe left
       if (angle <= -45 && angle >= -135) {
+         console.log("swipe up");
          return "up";
       }
       // swipe right
       if (angle >= 45 && angle <= 135) {
+         console.log("swipe down");
+
          return "down";
       }
       // swipe down
       if (angle >= -45 && angle <= 45) {
+         console.log("swipe right");
+
          return "right";
       }
       // swipe up
-      if (angle >= 170 || angle <= -170) {
+      if (angle >= 135 || angle <= -135) {
+         console.log("swipe left");
+
          return "left";
       }
      
