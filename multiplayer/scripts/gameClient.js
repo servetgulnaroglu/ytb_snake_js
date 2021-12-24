@@ -47,12 +47,13 @@ const gameClient = {
     joinRoom: async function (roomId, playerId) {
         return await asyncEmit("joinRoom", { roomId, playerId });
     },
-    moveSnake: function (roomId, playerId, key) {
-        return asyncEmit("moveSnake", {roomId, playerId, key});
+    keyPressed: function (roomId, key, playerId) {
+        return asyncEmit("keyPressed", {roomId, playerId, key});
     },
     updateState: async function (roomId) {
         return await asyncEmit("updateState", roomId);
-    }
+    },
+  
 }
 
 export default gameClient;

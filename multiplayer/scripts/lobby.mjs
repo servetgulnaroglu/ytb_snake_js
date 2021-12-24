@@ -37,11 +37,12 @@ const lobby = {
         return room.updateState();
 
     },
-    moveSnake(roomId, playerId, key) {
+    keyPressed(roomId, key, playerId) {
         const room = rooms[roomId];
         if (!room) return;
-        room.moveSnake(playerId, key);
+        room.keyPressed(key, playerId);
     },
+    
 
 }
 

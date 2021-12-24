@@ -11,7 +11,8 @@ export default class Game {
         this.numberOfPlayers = gameSettings.numberOfPlayers;
         this.numberOfApples = gameSettings.numberOfApples;
         this.snakes = [];
-        this.apples = [];   
+        this.apples = [];
+        this.bombs = [];
     }
 
     initializeApples() {
@@ -28,7 +29,7 @@ export default class Game {
 
     removeSnake(playerId) {
         const snake = this.snakes.find(snake => snake.playerId === playerId);
-        
+
         if (snake) {
             this.snakes.splice(this.snakes.indexOf(snake), 1);
         }
@@ -112,39 +113,61 @@ export default class Game {
         for (let i = 0; i < this.numberOfPlayers; i++) {
             this.addSnake();
         }
-       
+
     }
 
     updateState() {
         this.updateSnakes();
         this.checkCollisions();
         this.checkEatenApples();
-
+        this.checkExplodedBombs();
         return {
             snakes: this.snakes,
             apples: this.apples,
             aliveSnakes: this.getAliveSnakes() || [],
+            bombs: this.bombs || [],
         }
     }
 
-    moveSnakeByPlayerId(playerId, key) {
-        const snake = this.snakes.find(snake => snake.playerId === playerId);
-        if (snake) {
-            snake.keyDown(key);
+    checkExplodedBombs() {
+        for (const snake of this.getAliveSnakes()) {
+            for (const bomb of this.bombs) {
+                if (snake.exploded(bomb)) {
+                    snake.die();
+                    setTimeout(this.recoverSnake, 5000, snake);
+                    this.bombs.splice(this.bombs.indexOf(bomb), 1);
+                }
+            }
         }
     }
 
-    moveSnakeByKey(key) {
-        const snake = this.getAliveSnakes().find(snake => snake.controls.up === key || snake.controls.down === key || snake.controls.left === key || snake.controls.right === key);
+    keyPressed(key, playerId) {
+
+        const snake = playerId ?
+        this.snakes.find(snake => snake.playerId == playerId) :
+        this.snakes.find(snake => snake.controls.up == key || snake.controls.down == key || snake.controls.left == key || snake.controls.right == key || snake.controls.bomb == key);
+        
         if (snake) {
-            snake.keyDown(key);
+            if (key == snake.controls.bomb) {
+                this.dropBomb(snake);
+                 }
+            else {
+                snake.keyDown(key);
+            }
         }
     }
 
     end() {
         this.snakes = [];
         this.apples = [];
+        this.bombs = [];
+    }
+
+    dropBomb(snake) {
+        const bomb = snake.dropBomb();
+        if (bomb) {
+            this.bombs.push(bomb);
+        }
+
     }
 }
-
-

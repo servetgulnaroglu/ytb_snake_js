@@ -7,6 +7,7 @@ export default class KeyboardListener {
             case keyMap.down:
             case keyMap.left:
             case keyMap.right:
+            case keyMap.bomb:
                keyboardHandler(event.key);
             default:
                break;

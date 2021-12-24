@@ -14,20 +14,21 @@ export default class Snake {
         this.tail = [{ x: x, y: y }];
         this.head = this.tail[this.tail.length - 1];
         this.controls = controls;
+
+        this.remainingBombs = 3;
     }
- 
+
     move() {
         const newCoordinates = this.getNextCoordinates();
- 
+
         this.tail.shift();
         this.tail.push(newCoordinates);
         this.head = this.tail[this.tail.length - 1];
-        
-        this.acceptInput  = true;
+
+        this.acceptInput = true;
     }
 
     keyDown(key) {
- 
         switch (key) {
             case this.controls.up:
                 this.turnUp();
@@ -44,7 +45,7 @@ export default class Snake {
             default:
                 break;
         }
-    } 
+    }
 
     turnLeft() {
         if (!this.acceptInput || this.rotateX === 1)
@@ -52,7 +53,7 @@ export default class Snake {
 
         this.rotateX = -1;
         this.rotateY = 0;
-        this.acceptInput  = false;
+        this.acceptInput = false;
     }
 
     turnUp() {
@@ -61,29 +62,29 @@ export default class Snake {
 
         this.rotateX = 0;
         this.rotateY = -1;
-        this.acceptInput  = false;
+        this.acceptInput = false;
     }
 
     turnRight() {
-        if (!this.acceptInput  || this.rotateX === -1)
+        if (!this.acceptInput || this.rotateX === -1)
             return;
 
         this.rotateX = 1;
         this.rotateY = 0;
-        this.acceptInput  = false;
+        this.acceptInput = false;
     }
 
     turnDown() {
-        if (!this.acceptInput  || this.rotateY === -1)
+        if (!this.acceptInput || this.rotateY === -1)
             return;
 
         this.rotateX = 0;
         this.rotateY = 1;
-        this.acceptInput  = false;
+        this.acceptInput = false;
     }
 
     eat(apple) {
-        return (this.head.x === apple.x && this.head.y === apple.y) 
+        return (this.head.x === apple.x && this.head.y === apple.y)
     }
 
     grow() {
@@ -117,6 +118,10 @@ export default class Snake {
         return newCoordinates;
     }
 
+    exploded(bomb) {
+        return (this.head.x === bomb.x && this.head.y === bomb.y)
+    }
+
     hasCollision(otherSnake) {
         if (this !== otherSnake && this.head.x === otherSnake.head.x && this.head.y === otherSnake.head.y) {
             return true;
@@ -128,13 +133,31 @@ export default class Snake {
         }
         return false;
     }
- 
+
     die() {
         this.rotateX = 0;
         this.rotateY = 1;
         this.acceptInput = true;
-        this.tail = [{ x: this.x, y:  this.y }];
+        this.tail = [{ x: this.x, y: this.y }];
         this.head = this.tail[this.tail.length - 1];
         this.alive = false;
+    }
+
+    recoverBomb() {
+        setTimeout(() => {
+            this.remainingBombs++;
+        }, 10000);
+    }
+
+    //drop bomb right after the tail
+    dropBomb() {
+        if (this.remainingBombs > 0) {
+            const bombPosition = this.tail[this.tail.length - 1];
+            const bombDropped = { x: bombPosition.x, y: bombPosition.y, color: this.color, size: this.size - 5 };
+            this.remainingBombs--;
+            this.recoverBomb();
+            return bombDropped;
+        }
+        return null;
     }
 }

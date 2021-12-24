@@ -35,10 +35,11 @@ export default class Room {
         return this.game.updateState();
     }
 
-    moveSnake(playerId, key) {
-
-        this.game.moveSnakeByPlayerId(playerId, key);
+    keyPressed(key, playerId) {
+        this.game.keyPressed(key, playerId);
     }
+
+    
 
 
 } 

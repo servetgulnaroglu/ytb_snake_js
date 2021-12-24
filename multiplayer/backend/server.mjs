@@ -61,13 +61,13 @@ io.on('connection', function (socket) {
     });
 
     // move snake
-    socket.on('moveSnake', function (settings) {
+    socket.on('keyPressed', function (settings) {
          
-        lobby.moveSnake(settings.roomId, settings.playerId, settings.key);
-        socket.emit("moveSnake", settings);
+        lobby.keyPressed(settings.roomId, settings.key, settings.playerId);
+        socket.emit("keyPressed", settings);
          
     });
-    
+ 
      
 
 });

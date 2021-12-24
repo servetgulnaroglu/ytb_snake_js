@@ -5,6 +5,7 @@ import SwipeGestureListener from './listeners/swipeGestureListener.js';
 import ScoreRenderer from './renderers/scoreRenderer.js';
 import SnakeRenderer from './renderers/snakeRenderer.js';
 import AppleRenderer from './renderers/appleRenderer.js';
+import BombRenderer from './renderers/bombRenderer.js';
 
 const main = document.getElementsByTagName('main')[0];
 const footer = document.getElementsByTagName('footer')[0];
@@ -58,9 +59,9 @@ function startLocalGame() {
 
 function keyboardHandler(key) {
     if (currentGame) {
-        currentGame.moveSnakeByKey(key);
+        currentGame.keyPressed(key);
     } else if (currentRoomId) {
-        gameClient.moveSnake(currentRoomId, playerId, key);
+         gameClient.keyPressed(currentRoomId, key, playerId);
     }
 }
 
@@ -105,11 +106,13 @@ async function gameLoop(timestamp) {
 const scoreRenderer = new ScoreRenderer(canvas);
 const appleRenderer = new AppleRenderer(canvas);
 const snakeRenderer = new SnakeRenderer(canvas);
+const bombRenderer = new BombRenderer(canvas);
 
 function draw(state) {
     snakeRenderer.draw(state);
     scoreRenderer.draw(state);
     appleRenderer.draw(state);
+    bombRenderer.draw(state);
 }
 
 function clearCanvas() {

@@ -11,8 +11,8 @@ export default class ScoreRenderer {
         for(var snake of state.snakes) {
             this.ctx.fillStyle = snake.color;
             const playerIndex = state.snakes.indexOf(snake);
-            const canvasWidthOffset = (playerIndex * 120); 
-            this.ctx.fillText(`${snake.playerId}: ${snake.tail.length - 1}`, canvasWidthOffset + 70, 18);
+            const canvasWidthOffset = (playerIndex * 170); 
+            this.ctx.fillText(`${snake.playerId}: ${snake.tail.length - 1} bomb:${snake.remainingBombs}`, canvasWidthOffset + 70, 18);
         }
     }
 }
