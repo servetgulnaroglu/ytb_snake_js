@@ -1,0 +1,40 @@
+ @import "crt.css"; 
+ @import "form-colors.css";
+
+ body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column; 
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+ 
+ #screen {
+  
+    background-color: #000;
+    
+    z-index: 1000 !important;
+    opacity: 0.9;
+    padding: 5px;
+}
+  
+.card {
+    border-radius: 15px;
+   
+}
+
+#tv {
+    background-color: white;
+    border: black solid 15px
+}
+ 
+.controls {
+    margin-top: 10px;
+}
+
+
+.input-field {
+    margin: 0 !important;
+}

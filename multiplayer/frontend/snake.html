@@ -1,0 +1,162 @@
+<html>
+
+<head>
+    <title>Snake Game</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <link rel="stylesheet" href="./styles/styles.css">
+</head>
+
+<body>
+    <main>
+        <div class="row">
+            <div class="col l8 m12 s12">
+                <div id="tv" class="card">
+                    <div id="screen" class="card-content">
+                        <div id="scanline"></div>
+                        <span class="card-title">Snake Game</span>
+                        <canvas id="canvas" width="560" height="520"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col l4 m12 s12">
+                <div class="settings">
+                    <div class="card">
+                        <div class="card-content">
+                            <span class="card-title">Settings</span>
+                            <div class="row">
+                                <div class="col s12">
+                                    <div class="switch">
+                                        <label>
+                                            Local
+                                            <input type="checkbox" id="online">
+                                            <span class="lever"></span>
+                                            Online
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s12">
+                                    <label for="speed">Speed:</label>
+                                    <p class="range-field">
+                                        <input type="range" id="speed" min="5" max="25" value="15">
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="number" id="players" min="1" max="4" value="2">
+                                    <label for="players">Players:</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <label for="apples">Apples:</label>
+
+                                    <input type="number" id="apples" min="1" max="10" value="1">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input type="text" id="player-id" disabled>
+                                    <label for="player-id">Player ID</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col s6">
+                                    <button id="create-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Create
+                                        room</button>
+
+                                </div>
+                                <div class="input-field col s6">
+                                    <input type="text" id="room-id" disabled>
+                                    <label for="room-id">Room ID</label>
+                                </div>
+
+                            </div>
+                           
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <input type="text" id="room-id-input" disabled>
+                                    <label for="room-id-input">Room ID</label>
+
+                                </div>
+                                <div class="input-field col s6">
+                                    <button id="join-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Join
+                                        room</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <button id="leave-room-button"
+                                        class="waves-effect waves-light btn green darken-1" disabled>Leave
+                                        room</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col s12">
+
+                            <button id="start-button" class="waves-effect waves-light btn green darken-1">Start</button>
+                            <button id="stop-button" class="waves-effect waves-light btn green darken-1"
+                                disabled>Stop</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="page-footer green darken-4">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2021 Raphael Carubbi Neto
+                <a class="grey-text text-lighten-4 right" href="https://github.com/rcarubbi" target="_blank">Github</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script type="module">
+        import presentation from '../scripts/presentation.js';
+
+        M.AutoInit();
+
+        window.addEventListener("resize", presentation.resizeGameArea);
+
+        // resize game area on document ready
+        window.addEventListener("load", presentation.resizeGameArea);
+
+        const createRoom = document.getElementById("create-room-button");
+        const leaveRoom = document.getElementById("leave-room-button");
+        const joinRoom = document.getElementById("join-room-button");
+        
+        const startButton = document.getElementById("start-button");
+        const stopButton = document.getElementById("stop-button");
+
+        const onlineSwitch = document.getElementById("online");
+
+        const screen = document.getElementById("screen");
+ 
+        startButton.addEventListener("click", presentation.startGame);
+        stopButton.addEventListener("click", presentation.stopGameStart);
+        onlineSwitch.addEventListener("click", presentation.connectOnlineGame);
+       
+        screen.addEventListener("animationend", presentation.stopGameEnd);
+
+        createRoom.addEventListener("click", presentation.createRoom);
+        leaveRoom.addEventListener("click", presentation.leaveRoom);
+        joinRoom.addEventListener("click", presentation.joinRoom);
+        presentation.disablePageScrollOnCanvas();
+        
+    </script>
+</body>
+
+</html>
