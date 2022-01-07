@@ -34,7 +34,7 @@ function checkHitWall() {
 
     if (headTail.x == - snake.size) {
         headTail.x = canvas.width - snake.size
-    } else if (headTail.x == canvas.widh) {
+    } else if (headTail.x == canvas.width) {
         headTail.x = 0
     } else if (headTail.y == - snake.size) {
         headTail.y = canvas.height - snake.size
