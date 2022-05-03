@@ -1,12 +1,16 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext('2d')
+const HardButton = document.getElementById('HardMode')
+let HardModeOn = false
+
+
 
 window.onload = () => {
     gameLoop()
 }
 
 function gameLoop() {
-    setInterval(show, 1000/20) // here 15 is our fps value
+    setInterval(show, 1000 / 20) // here 15 is our fps value
 }
 
 function show() {
@@ -17,8 +21,13 @@ function show() {
 function update() {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height)
     snake.move()
+    SnakeHitCheck();
+    if (HardModeOn) {
+        checkHitWallHard()
+    } else {
+        checkHitWall()
+    }
     eatApple()
-    checkHitWall()
 }
 
 function eatApple() {
@@ -29,38 +38,58 @@ function eatApple() {
         }
 }
 
-function checkHitWall() {
-    let headTail = snake.tail[snake.tail.length -1]
+function SnakeHitCheck() {
+    let headTail = snake.tail[snake.tail.length - 1];
+    for (let i = 0; i < snake.tail.length - 1; i++) {
+        if (headTail.x == snake.tail[i].x && headTail.y == snake.tail[i].y) {
+            snake = new Snake(20, 20, 20);
+        }
+    }
+}
 
-    if (headTail.x == - snake.size) {
+function checkHitWall() {
+    let headTail = snake.tail[snake.tail.length - 1]
+    if (headTail.x == -snake.size) {
         headTail.x = canvas.width - snake.size
-    } else if (headTail.x == canvas.widh) {
+    } else if (headTail.x == canvas.width) {
         headTail.x = 0
-    } else if (headTail.y == - snake.size) {
+    } else if (headTail.y == -snake.size) {
         headTail.y = canvas.height - snake.size
     } else if (headTail.y == canvas.height) {
-        headTail.y = 0 
+        headTail.y = 0
+    }
+}
+
+function checkHitWallHard() {
+    let headTail = snake.tail[snake.tail.length - 1]
+    let WallHit = false
+    if (headTail.x == -snake.size || headTail.x == canvas.width || headTail.y == -snake.size || headTail.y == canvas.height) {
+        WallHit = true
+    }
+    if (WallHit) {
+        record = (snake.tail.length - 1);
+        snake = new Snake(20, 20, 20);
     }
 }
 
 function draw() {
-    createRect(0,0,canvas.width, canvas.height, "black")
-    createRect(0,0, canvas.width, canvas.height)
+    createRect(0, 0, canvas.width, canvas.height, "black")
 
-    for (let i = 0; i < snake.tail.length; i++){
+    for (let i = 0; i < snake.tail.length; i++) {
         createRect(snake.tail[i].x + 2.5, snake.tail[i].y + 2.5,
-            snake.size - 5, snake.size- 5, "white")
+            snake.size - 5, snake.size - 5, "white")
     }
 
     canvasContext.font = "20px Arial"
     canvasContext.fillStyle = "#00FF42"
-    canvasContext.fillText("Score: " + (snake.tail.length -1),canvas.width - 120, 18)
+    canvasContext.fillText("Score: " + (snake.tail.length - 1), canvas.width - 120, 18)
     createRect(apple.x, apple.y, apple.size, apple.size, apple.color)
 }
 
-function createRect(x,y,width, height,color) {
+function createRect(x, y, width, height, color) {
     canvasContext.fillStyle = color
     canvasContext.fillRect(x, y, width, height)
+
 }
 
 window.addEventListener("keydown", (event) => {
@@ -81,12 +110,31 @@ window.addEventListener("keydown", (event) => {
     }, 1)
 })
 
+HardButton.addEventListener('click', function onClick(event) {
+    if (HardModeOn) {
+        canvas.width = "800"
+        canvas.height = "800"
+        HardModeOn = false
+        event.target.style.color = 'white';
+    } else {
+        canvas.width = "500"
+        canvas.height = "500"
+        HardModeOn = true
+        event.target.style.color = 'red';
+    }
+    snake = new Snake(20, 20, 20);
+    apple = new Apple();
+});
+
 class Snake {
     constructor(x, y, size) {
         this.x = x
         this.y = y
         this.size = size
-        this.tail = [{x:this.x, y:this.y}]
+        this.tail = [{
+            x: this.x,
+            y: this.y
+        }]
         this.rotateX = 0
         this.rotateY = 1
     }
@@ -121,15 +169,15 @@ class Snake {
     }
 }
 
-class Apple{
-    constructor(){
+class Apple {
+    constructor() {
         let isTouching
-        
+
         while (true) {
             isTouching = false;
             this.x = Math.floor(Math.random() * canvas.width / snake.size) * snake.size
             this.y = Math.floor(Math.random() * canvas.height / snake.size) * snake.size
-            
+
             for (let i = 0; i < snake.tail.length; i++) {
                 if (this.x == snake.tail[i].x && this.y == snake.tail[i].y) {
                     isTouching = true
@@ -146,5 +194,5 @@ class Apple{
     }
 }
 
-const snake = new Snake(20,20,20);
+let snake = new Snake(20, 20, 20);
 let apple = new Apple();
