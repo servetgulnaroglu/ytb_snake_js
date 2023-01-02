@@ -7,10 +7,7 @@ https://youtu.be/J42SZXS-_Qo
 
 Fatures:
 
-
-Live demo here:
-https://carubbi-snake.azurewebsites.net/frontend/snake.html
-
+Live demo here: https://carubbi-snake.azurewebsites.net
  
 ## Features
 
