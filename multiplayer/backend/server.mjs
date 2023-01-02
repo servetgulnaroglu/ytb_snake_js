@@ -17,7 +17,7 @@ const port = process.env.PORT || 3000;
 // listen to port 3000
 httpServer.listen(port, function () {
     // serve frontend game
-    app.use("/frontend", express.static(path.join(__dirname, '..', 'frontend')));
+    app.use("/", express.static(path.join(__dirname, '..', 'frontend')));
 
     app.use("/scripts", express.static(path.join(__dirname, '..', 'scripts')));
 
