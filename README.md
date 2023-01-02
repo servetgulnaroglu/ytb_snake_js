@@ -9,7 +9,7 @@ Fatures:
 
 
 Live demo here:
-https://carubbi-snake.herokuapp.com/frontend/snake.html
+https://carubbi-snake.azurewebsites.net/frontend/snake.html
 
  
 ## Features
