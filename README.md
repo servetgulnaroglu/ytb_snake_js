@@ -5,14 +5,9 @@
 (original version from a youtube video linked below)
 https://youtu.be/J42SZXS-_Qo
 
-[![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
-
 Fatures:
 
-
-Live demo here:
-https://carubbi-snake.herokuapp.com/frontend/snake.html
-
+Live demo here: https://carubbi-snake.azurewebsites.net
  
 ## Features
 

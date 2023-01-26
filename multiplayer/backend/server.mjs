@@ -13,11 +13,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // select port according to environment
 const port = process.env.PORT || 3000;
-
+const options = {
+  index: "snake.html"
+};
 // listen to port 3000
 httpServer.listen(port, function () {
     // serve frontend game
-    app.use("/frontend", express.static(path.join(__dirname, '..', 'frontend')));
+    
+    app.use("/", express.static(path.join(__dirname, '..', 'frontend'), options));
 
     app.use("/scripts", express.static(path.join(__dirname, '..', 'scripts')));
 
