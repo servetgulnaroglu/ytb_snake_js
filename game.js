@@ -1,5 +1,6 @@
 const canvas = document.getElementById("canvas")
 const canvasContext = canvas.getContext('2d')
+let record = 0
 
 window.onload = () => {
     gameLoop()
@@ -16,9 +17,10 @@ function show() {
 
 function update() {
     canvasContext.clearRect(0, 0, canvas.width, canvas.height)
-    snake.move()
-    eatApple()
+    snake.move()    
+    checkHitSnake();
     checkHitWall()
+    eatApple()
 }
 
 function eatApple() {
@@ -43,6 +45,17 @@ function checkHitWall() {
     }
 }
 
+function checkHitSnake(){
+    var headTail = snake.tail[snake.tail.length - 1];
+    for (let i = 0; i < snake.tail.length - 1; i++) {
+        if(headTail.x == snake.tail[i].x && headTail.y == snake.tail[i].y){
+            record = (snake.tail.length -1);
+            snake = new Snake(20 , 20, 20);
+        }
+    }
+}
+
+
 function draw() {
     createRect(0,0,canvas.width, canvas.height, "black")
     createRect(0,0, canvas.width, canvas.height)
@@ -55,6 +68,7 @@ function draw() {
     canvasContext.font = "20px Arial"
     canvasContext.fillStyle = "#00FF42"
     canvasContext.fillText("Score: " + (snake.tail.length -1),canvas.width - 120, 18)
+    canvasContext.fillText("Record: " + record, canvas.width - 120, 38);
     createRect(apple.x, apple.y, apple.size, apple.size, apple.color)
 }
 
@@ -146,5 +160,5 @@ class Apple{
     }
 }
 
-const snake = new Snake(20,20,20);
+let snake = new Snake(20,20,20);
 let apple = new Apple();
